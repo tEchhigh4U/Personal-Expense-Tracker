@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Transaction: Identifiable {
+struct Transaction: Identifiable, Codable {
     let id: Int
     let date: String
     let institution: String
@@ -15,15 +15,20 @@ struct Transaction: Identifiable {
     var merchant: String
     let amount: Double
     let type: TransactionType.RawValue
-    var categroyId: Int
+    var categoryId: Int
     var category: String
     let isPending: Bool
     var isTransfer: Bool
     var isExpense: Bool
     var isEdited: Bool
     
+    // Computed property to parse date string to Date    
     var dateParsed: Date {
-        date.dateParsed()
+        return date.dateParsed()
+    }
+    
+    var signedAmount: Double {
+        return type == TransactionType.credit.rawValue ? amount : -amount
     }
 }
 
