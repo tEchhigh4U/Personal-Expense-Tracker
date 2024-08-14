@@ -14,3 +14,21 @@ extension Color {
     static let customText = Color("Text")
     static let customSystemBackground = Color(uiColor: .systemBackground)
 }
+
+extension DateFormatter{
+    static let allNumericHK: DateFormatter = {
+        print("Initializing DateFormatter")
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        
+        return formatter
+    }()
+}
+
+extension String {
+    func dateParsed() -> Date {
+        guard let parsedDate = DateFormatter.allNumericHK.date(from: self) else { return Date()}
+        
+        return parsedDate
+    }
+}
