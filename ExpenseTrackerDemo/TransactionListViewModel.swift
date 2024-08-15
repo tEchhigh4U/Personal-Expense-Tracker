@@ -8,6 +8,9 @@
 import Foundation
 import Combine
 
+typealias TransactionGroup = [String: [Transaction]] // [String: [Transaction]] is a dictionary type
+
+
 final class TransactionListViewModel: ObservableObject {
     @Published var transactions: [Transaction] = []  // initialized empty object
     
@@ -76,4 +79,11 @@ final class TransactionListViewModel: ObservableObject {
 //            }
 //        }.resume()
     
+    func groupTransactionByMonth() -> TransactionGroup {
+        guard !transactions.isEmpty else { return [:] }
+        
+        let groupTransactions = TransactionGroup(grouping: transactions) { $0.month }
+        
+        return groupTransactions
+    }
 }
