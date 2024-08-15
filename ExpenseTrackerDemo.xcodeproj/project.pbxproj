@@ -18,6 +18,7 @@
 		10D12E8F2C6CDB3800D2AAD6 /* TransactionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D12E8E2C6CDB3800D2AAD6 /* TransactionRow.swift */; };
 		10D12E922C6CEB0900D2AAD6 /* SwiftUIFontIcon in Frameworks */ = {isa = PBXBuildFile; productRef = 10D12E912C6CEB0900D2AAD6 /* SwiftUIFontIcon */; };
 		10D12E942C6CEC7800D2AAD6 /* TransactionListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D12E932C6CEC7800D2AAD6 /* TransactionListViewModel.swift */; };
+		10D12E962C6E325300D2AAD6 /* RecentTransactionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D12E952C6E325300D2AAD6 /* RecentTransactionList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		10D12E862C6CD91100D2AAD6 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		10D12E8E2C6CDB3800D2AAD6 /* TransactionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRow.swift; sourceTree = "<group>"; };
 		10D12E932C6CEC7800D2AAD6 /* TransactionListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListViewModel.swift; sourceTree = "<group>"; };
+		10D12E952C6E325300D2AAD6 /* RecentTransactionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTransactionList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 				10D12E8E2C6CDB3800D2AAD6 /* TransactionRow.swift */,
 				10D12E932C6CEC7800D2AAD6 /* TransactionListViewModel.swift */,
 				10D12E762C6CCF7C00D2AAD6 /* Assets.xcassets */,
+				10D12E952C6E325300D2AAD6 /* RecentTransactionList.swift */,
 				10D12E782C6CCF7C00D2AAD6 /* Preview Content */,
 			);
 			path = ExpenseTrackerDemo;
@@ -165,6 +168,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10D12E872C6CD91100D2AAD6 /* PreviewData.swift in Sources */,
+				10D12E962C6E325300D2AAD6 /* RecentTransactionList.swift in Sources */,
 				10D12E832C6CD02800D2AAD6 /* TransactionModel.swift in Sources */,
 				10D12E752C6CCF7B00D2AAD6 /* ContentView.swift in Sources */,
 				10D12E8F2C6CDB3800D2AAD6 /* TransactionRow.swift in Sources */,
