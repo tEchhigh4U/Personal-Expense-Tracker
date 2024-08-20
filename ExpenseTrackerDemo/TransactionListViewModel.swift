@@ -7,8 +7,9 @@
 
 import Foundation
 import Combine
+import Collections
 
-typealias TransactionGroup = [String: [Transaction]] // [String: [Transaction]] is a dictionary type
+typealias TransactionGroup = OrderedDictionary<String, [Transaction]> // [String: [Transaction]] is a dictionary type
 
 
 final class TransactionListViewModel: ObservableObject {
