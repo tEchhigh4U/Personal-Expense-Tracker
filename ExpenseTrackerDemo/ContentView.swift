@@ -29,13 +29,15 @@ struct ContentView: View {
                         CardView {
                             VStack(alignment: .leading){
                                 ChartLabel(totalExpense.formatted(.currency(code: "HKD")), type: .title, format: "HK$%.02f")
-                                
+                                    
                                 LineChart()
                             }
+                            .background(Color.customSystemBackground)
                         }
                         .data(data)
                         .chartStyle(ChartStyle(backgroundColor: Color.customSystemBackground, foregroundColor: ColorGradient(Color.icon.opacity(0.4), Color.icon)))
                         .frame(height: 300)
+
                     }
                     
                     // MARK: Transaction List
