@@ -78,3 +78,5 @@ SortedCFDatabase.def
 htmlcov
 .coverage
 /benchmark/scripts/Benchmark_Driverc
+
+.GoogleService-Info

@@ -17,7 +17,7 @@ struct ContentView: View {
             ScrollView{
                 VStack(alignment: .leading, spacing: 24) {
                    //MARK: Title
-                    Text("Overview")
+                    Text("Overview - \(todayString.dateParsed().formatted())" )
                         .font(.title2)
                         .bold()
                     

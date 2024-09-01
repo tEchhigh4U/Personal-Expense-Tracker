@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Firebase
 import Collections
 
 typealias TransactionGroup = OrderedDictionary<String, [Transaction]> // [String: [Transaction]] is a dictionary type
@@ -15,49 +16,83 @@ typealias TransactionPrefixSum = [(String, Double)] // a record of accumulated s
 final class TransactionListViewModel: ObservableObject {
     @Published var transactions: [Transaction] = []  // initialized empty object
     
+    private var ref: DatabaseReference = Database.database().reference()
     private var cancellables = Set<AnyCancellable>() // empty object
     
     // init method
     init(){
-        getTransactions()
+        observeTransactions()
     }
     
-    // get transactions record from the url
-    func getTransactions() {
-        guard let url = URL(string: "https://designcode.io/data/transactions.json") else {
-            print("Invalid URL is being used.")
-            return
+    private func observeTransactions() {
+        print("start getting data from DB")
+            ref.child("transaction").observe(.value) { [weak self] snapshot in
+                var newTransactions = [Transaction]()
+                for child in snapshot.children.allObjects as? [DataSnapshot] ?? [] {
+                    guard let value = child.value as? [String: Any] else {
+                        continue
+                    }
+
+                    let transaction = Transaction(
+                        id: value["id"] as? Int ?? 0,
+                        date: value["date"] as? String ?? "",
+                        institution: value["institution"] as? String ?? "",
+                        account: value["account"] as? String ?? "",
+                        merchant: value["merchant"] as? String ?? "",
+                        amount: value["amount"] as? Double ?? 0.0,
+                        type: value["type"] as? String ?? "",
+                        categoryId: value["categoryId"] as? Int ?? 0,
+                        category: value["category"] as? String ?? "",
+                        isPending: value["isPending"] as? Bool ?? false,
+                        isTransfer: value["isTransfer"] as? Bool ?? false,
+                        isExpense: value["isExpense"] as? Bool ?? false,
+                        isEdited: value["isEdited"] as? Bool ?? false
+                    )
+
+                    newTransactions.append(transaction)
+                }
+                DispatchQueue.main.async {
+                    self?.transactions = newTransactions
+                }
+            }
         }
-        
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .formatted(DateFormatter.allNumericUS)
-        
-        
-                URLSession.shared.dataTaskPublisher(for:url)
-                    .tryMap { (data, response) -> Data in
-                        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                            dump(response)
-                            throw URLError(.badServerResponse)
-                        }
+    
+    // get transactions record from the url
+//    func getTransactions() {
+//        guard let url = URL(string: "https://designcode.io/data/transactions.json") else {
+//            print("Invalid URL is being used.")
+//            return
+//        }
+//        
+//        let decoder = JSONDecoder()
+//        decoder.dateDecodingStrategy = .formatted(DateFormatter.allNumericUS)
+//        
+//        
+//                URLSession.shared.dataTaskPublisher(for:url)
+//                    .tryMap { (data, response) -> Data in
+//                        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+//                            dump(response)
+//                            throw URLError(.badServerResponse)
+//                        }
 //                        let dataString = String(data: data, encoding: .utf8) ?? "Invalid data encoding"
 //                            print("Received data: \(dataString)")
-                        return data
-                    }
-                    .decode(type: [Transaction].self, decoder: decoder)
-                    .receive(on : DispatchQueue.main)
-                    .sink(receiveCompletion: { completion in
-                        switch completion {
-                        case .failure(let error):
-                            print("Error fetching transactions:", error.localizedDescription)
-                        case .finished:
-                            print("Finished fetching transactions")
-                        }
-                    }, receiveValue: { [weak self] result in
-                        self?.transactions = result
-                        print("Transactions: \(result)")
-                    })
-                    .store(in: &cancellables)
-            }
+//                        return data
+//                    }
+//                    .decode(type: [Transaction].self, decoder: decoder)
+//                    .receive(on : DispatchQueue.main)
+//                    .sink(receiveCompletion: { completion in
+//                        switch completion {
+//                        case .failure(let error):
+//                            print("Error fetching transactions:", error.localizedDescription)
+//                        case .finished:
+//                            print("Finished fetching transactions")
+//                        }
+//                    }, receiveValue: { [weak self] result in
+//                        self?.transactions = result
+//                        print("Transactions: \(result)")
+//                    })
+//                    .store(in: &cancellables)
+//            }
 
 //    Below are the code for debugging
 //        URLSession.shared.dataTask(with: url) { data, response, error in
@@ -95,7 +130,8 @@ final class TransactionListViewModel: ObservableObject {
         guard !transactions.isEmpty else {return [] }
         
         // MARK: update the actual date when publishing the application
-        let today = "02/17/2022".dateParsed() // Date()
+//        let today = "02/17/2022".dateParsed() // Date()
+        let today = todayString.dateParsed()
         let dateInterval = Calendar.current.dateInterval(of: .month, for: today)!
         print("dateInterval", dateInterval)
         
