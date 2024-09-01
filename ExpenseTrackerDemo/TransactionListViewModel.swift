@@ -22,6 +22,7 @@ final class TransactionListViewModel: ObservableObject {
         getTransactions()
     }
     
+    // get transactions record from the url
     func getTransactions() {
         guard let url = URL(string: "https://designcode.io/data/transactions.json") else {
             print("Invalid URL is being used.")
