@@ -132,6 +132,7 @@ final class TransactionListViewModel: ObservableObject {
         // MARK: update the actual date when publishing the application
 //        let today = "02/17/2022".dateParsed() // Date()
         let today = todayString.dateParsed()
+        print("today is", today)
         let dateInterval = Calendar.current.dateInterval(of: .month, for: today)!
         print("dateInterval", dateInterval)
         

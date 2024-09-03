@@ -10,13 +10,14 @@ import SwiftUICharts
 
 struct ContentView: View {
     @EnvironmentObject var transactionListVM: TransactionListViewModel // Type
-//    var demoData: [Double] = [8, 2, 4, 6, 19, 22]
+    //    var demoData: [Double] = [8, 2, 4, 6, 19, 22]
+    @State private var isShowingNewRecordView = false
     
     var body: some View {
-        NavigationView{
+        NavigationStack{
             ScrollView{
                 VStack(alignment: .leading, spacing: 24) {
-                   //MARK: Title
+                    //MARK: Title
                     Text("Overview - \(todayString.dateParsed().formatted())" )
                         .font(.title2)
                         .bold()
@@ -29,15 +30,15 @@ struct ContentView: View {
                         CardView {
                             VStack(alignment: .leading){
                                 ChartLabel(totalExpense.formatted(.currency(code: "HKD")), type: .title, format: "HK$%.02f")
-                                    
+                                
                                 LineChart()
                             }
                             .background(Color.customSystemBackground)
                         }
                         .data(data)
                         .chartStyle(ChartStyle(backgroundColor: Color.customSystemBackground, foregroundColor: ColorGradient(Color.icon.opacity(0.4), Color.icon)))
-                        .frame(height: 300)
-
+                        .frame(height: 250)
+                        
                     }
                     
                     // MARK: Transaction List
@@ -51,31 +52,42 @@ struct ContentView: View {
             .toolbar {
                 // MARK: Notification Icon
                 ToolbarItem {
-                    Image(systemName: "bell.badge")
-                        .symbolRenderingMode(.palette)
-                        .foregroundStyle(Color.customIcon, .primary)
+                    Menu {
+                        Button("Create a new record", action: {
+                            self.isShowingNewRecordView = true
+                        })
+                    } label: {
+                        // Image(systemName: "bell.badge")
+                        Image(systemName: "line.horizontal.3")
+                            .imageScale(.large)
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(Color.customIcon, .primary)
+                    }
                 }
+            }
+            .navigationDestination(isPresented: $isShowingNewRecordView) {
+                NewTransactionView()
             }
         }
         .navigationViewStyle(.stack)
         .accentColor(.primary)
     }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static let transactionListVM: TransactionListViewModel = {
-        let transactioinListVM  = TransactionListViewModel()
-        transactioinListVM.transactions = transactionListPreviewData
-        return transactioinListVM
-    }()
     
-    static var previews: some View {
-        Group{
-            ContentView()
-            ContentView()
-                .preferredColorScheme(.dark)
-        }
-        .environmentObject(transactionListVM)
+    struct ContentView_Previews: PreviewProvider {
+        static let transactionListVM: TransactionListViewModel = {
+            let transactioinListVM  = TransactionListViewModel()
+            transactioinListVM.transactions = transactionListPreviewData
+            return transactioinListVM
+        }()
         
+        static var previews: some View {
+            Group{
+                ContentView()
+                ContentView()
+                    .preferredColorScheme(.dark)
+            }
+            .environmentObject(transactionListVM)
+            
+        }
     }
 }

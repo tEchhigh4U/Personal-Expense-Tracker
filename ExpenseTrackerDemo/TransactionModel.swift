@@ -45,7 +45,7 @@ struct Transaction: Identifiable, Codable, Hashable {
     }
 }
 
-enum TransactionType: String {
+enum TransactionType: String, CaseIterable {
     case debit = "debit"
     case credit = "credit"
 }

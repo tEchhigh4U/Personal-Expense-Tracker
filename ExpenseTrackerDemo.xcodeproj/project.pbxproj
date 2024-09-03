@@ -24,6 +24,8 @@
 		10D12EA12C74F32200D2AAD6 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = 10D12EA02C74F32200D2AAD6 /* SwiftUICharts */; };
 		10D12EAF2C84C26D00D2AAD6 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 10D12EAE2C84C26D00D2AAD6 /* FirebaseDatabase */; };
 		10D12EB32C84CFB600D2AAD6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10D12EB22C84CFB600D2AAD6 /* GoogleService-Info.plist */; };
+		10D12EB62C86151200D2AAD6 /* TransactionEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D12EB52C86151200D2AAD6 /* TransactionEntryViewModel.swift */; };
+		10D12EB82C86176300D2AAD6 /* NewTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D12EB72C86176300D2AAD6 /* NewTransactionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,8 @@
 		10D12E972C74C8EE00D2AAD6 /* TransactionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionList.swift; sourceTree = "<group>"; };
 		10D12EB22C84CFB600D2AAD6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		10D12EB42C84D02200D2AAD6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		10D12EB52C86151200D2AAD6 /* TransactionEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionEntryViewModel.swift; sourceTree = "<group>"; };
+		10D12EB72C86176300D2AAD6 /* NewTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTransactionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +95,8 @@
 				10D12E782C6CCF7C00D2AAD6 /* Preview Content */,
 				10D12E972C74C8EE00D2AAD6 /* TransactionList.swift */,
 				10D12EB22C84CFB600D2AAD6 /* GoogleService-Info.plist */,
+				10D12EB52C86151200D2AAD6 /* TransactionEntryViewModel.swift */,
+				10D12EB72C86176300D2AAD6 /* NewTransactionView.swift */,
 			);
 			path = ExpenseTrackerDemo;
 			sourceTree = "<group>";
@@ -193,7 +199,9 @@
 				10D12E962C6E325300D2AAD6 /* RecentTransactionList.swift in Sources */,
 				10D12E832C6CD02800D2AAD6 /* TransactionModel.swift in Sources */,
 				10D12E752C6CCF7B00D2AAD6 /* ContentView.swift in Sources */,
+				10D12EB82C86176300D2AAD6 /* NewTransactionView.swift in Sources */,
 				10D12E8F2C6CDB3800D2AAD6 /* TransactionRow.swift in Sources */,
+				10D12EB62C86151200D2AAD6 /* TransactionEntryViewModel.swift in Sources */,
 				10D12E732C6CCF7B00D2AAD6 /* ExpenseTrackerDemoApp.swift in Sources */,
 				10D12E942C6CEC7800D2AAD6 /* TransactionListViewModel.swift in Sources */,
 				10D12E852C6CD05100D2AAD6 /* Extensions.swift in Sources */,
