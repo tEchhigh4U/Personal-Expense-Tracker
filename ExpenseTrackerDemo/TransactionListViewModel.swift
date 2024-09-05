@@ -15,6 +15,7 @@ typealias TransactionPrefixSum = [(String, Double)] // a record of accumulated s
 
 final class TransactionListViewModel: ObservableObject {
     @Published var transactions: [Transaction] = []  // initialized empty object
+    @Published var isLoading = false
     
     private var ref: DatabaseReference = Database.database().reference()
     private var cancellables = Set<AnyCancellable>() // empty object
@@ -24,38 +25,70 @@ final class TransactionListViewModel: ObservableObject {
         observeTransactions()
     }
     
+    func refreshTransactions() {
+        isLoading = true
+        
+        // call related function globally
+        observeTransactions()
+        accumulateTransactions()
+        groupTransactionByMonth()
+
+        // Delay the completion of loading by 1 second
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.isLoading = false
+            print("Fetched \(self.transactions.count) transactions")
+        }
+    }
+    
     private func observeTransactions() {
-        print("start getting data from DB")
-            ref.child("transaction").observe(.value) { [weak self] snapshot in
-                var newTransactions = [Transaction]()
-                for child in snapshot.children.allObjects as? [DataSnapshot] ?? [] {
-                    guard let value = child.value as? [String: Any] else {
-                        continue
-                    }
-
-                    let transaction = Transaction(
-                        id: value["id"] as? Int ?? 0,
-                        date: value["date"] as? String ?? "",
-                        institution: value["institution"] as? String ?? "",
-                        account: value["account"] as? String ?? "",
-                        merchant: value["merchant"] as? String ?? "",
-                        amount: value["amount"] as? Double ?? 0.0,
-                        type: value["type"] as? String ?? "",
-                        categoryId: value["categoryId"] as? Int ?? 0,
-                        category: value["category"] as? String ?? "",
-                        isPending: value["isPending"] as? Bool ?? false,
-                        isTransfer: value["isTransfer"] as? Bool ?? false,
-                        isExpense: value["isExpense"] as? Bool ?? false,
-                        isEdited: value["isEdited"] as? Bool ?? false
-                    )
-
-                    newTransactions.append(transaction)
+        print("Start getting data from DB")
+        ref.child("transactions").observe(.value) { [weak self] snapshot in
+            guard let self = self else { return }
+            
+            var newTransactions = [Transaction]()
+            for child in snapshot.children.allObjects as? [DataSnapshot] ?? [] {
+                guard let value = child.value as? [String: Any] else {
+                    continue
                 }
-                DispatchQueue.main.async {
-                    self?.transactions = newTransactions
+
+                let transaction = Transaction(
+                    id: value["id"] as? Int ?? 0,
+                    date: value["date"] as? String ?? "",
+                    institution: value["institution"] as? String ?? "",
+                    account: value["account"] as? String ?? "",
+                    merchant: value["merchant"] as? String ?? "",
+                    amount: value["amount"] as? Double ?? 0.0,
+                    type: value["type"] as? String ?? "",
+                    categoryId: value["categoryId"] as? Int ?? 0,
+                    category: value["category"] as? String ?? "",
+                    isPending: value["isPending"] as? Bool ?? false,
+                    isTransfer: value["isTransfer"] as? Bool ?? false,
+                    isExpense: value["isExpense"] as? Bool ?? false,
+                    isEdited: value["isEdited"] as? Bool ?? false
+                )
+
+                newTransactions.append(transaction)
+            }
+            
+            // Sort transactions by date, most recent first
+            let sortedTransactions = newTransactions.sorted {
+                guard let date1 = DateFormatter.allNumericUS.date(from: $0.date),
+                      let date2 = DateFormatter.allNumericUS.date(from: $1.date) else {
+                    return false
+                }
+                return date1 > date2
+            }
+            
+            DispatchQueue.main.async {
+                self.transactions = sortedTransactions
+                print("Fetched and sorted \(self.transactions.count) transactions")
+                if let mostRecent = self.transactions.first {
+                    print("Most recent transaction: \(mostRecent.date), Merchant: \(mostRecent.merchant)")
                 }
             }
         }
+        print("Data retrieval observation set up completed.")
+    }
     
     // get transactions record from the url
 //    func getTransactions() {
@@ -119,9 +152,49 @@ final class TransactionListViewModel: ObservableObject {
     func groupTransactionByMonth() -> TransactionGroup {
         guard !transactions.isEmpty else { return [:] }
         
-        let groupTransactions = TransactionGroup(grouping: transactions) { $0.month }
+        let dateFormatter = DateFormatter.allNumericUS
+        let displayFormatter = DateFormatter()
+        displayFormatter.dateFormat = "MMMM yyyy"
         
-        return groupTransactions
+        // Group transactions by month
+        var tempGroupedTransactions = [String: [Transaction]]()
+        
+        for transaction in transactions {
+            if let date = dateFormatter.date(from: transaction.date) {
+                let monthYearString = displayFormatter.string(from: date)
+                if tempGroupedTransactions[monthYearString] == nil {
+                    tempGroupedTransactions[monthYearString] = []
+                }
+                tempGroupedTransactions[monthYearString]?.append(transaction)
+            }
+        }
+        
+        // Sort transactions within each group by date in descending order
+        for (key, value) in tempGroupedTransactions {
+            tempGroupedTransactions[key] = value.sorted(by: {
+                guard let date1 = dateFormatter.date(from: $0.date),
+                      let date2 = dateFormatter.date(from: $1.date) else {
+                    return false
+                }
+                return date1 > date2
+            })
+        }
+        
+        // Create an OrderedDictionary from the sorted groups
+        let sortedKeys = tempGroupedTransactions.keys.sorted { (month1, month2) -> Bool in
+            guard let date1 = displayFormatter.date(from: month1),
+                  let date2 = displayFormatter.date(from: month2) else {
+                return false
+            }
+            return date1 > date2
+        }
+        
+        var orderGroupedTransactions = TransactionGroup()
+        for key in sortedKeys {
+            orderGroupedTransactions[key] = tempGroupedTransactions[key]
+        }
+        
+        return orderGroupedTransactions
     }
     
     func accumulateTransactions() -> TransactionPrefixSum {

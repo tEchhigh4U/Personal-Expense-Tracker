@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Firebase
 
 class TransactionEntryViewModel: ObservableObject {
     @Published var date: String = ""
@@ -18,32 +19,45 @@ class TransactionEntryViewModel: ObservableObject {
     @Published var categoryId: Int? = nil
     @Published var category: String = ""
     
+    @Published var errorMessage: String?     // To display error messages
+    @Published var transactionStatus: Bool?  // To indicate success or failure
 
     var categories = Category.all
     
-    private var nextTransactionId: Int = 1 // simplified id generation logic
+    private var dbRef: DatabaseReference = Database.database().reference()
 
-    func createTransaction() -> Transaction? {
+    func createTransaction(completion: @escaping (Bool, String?) -> Void) {
         guard let parsedAmount = Double(amount), let categoryId = categoryId else {
-            return nil
+            // handle the error
+            completion(false, "Invalid amount or missing category.")
+            return
         }
 
-        let newTransaction = Transaction(
-            id: nextTransactionId,
-            date: date,
-            institution: institution,
-            account: account,
-            merchant: merchant,
-            amount: parsedAmount,
-            type: type.rawValue,
-            categoryId: categoryId,
-            category: category,
-            isPending: false,
-            isTransfer: false,
-            isExpense: true,
-            isEdited: false
-        )
-        nextTransactionId += 1
-        return newTransaction
+        let transactionDict: [String: Any] = [
+            "date": date,
+            "institution": institution,
+            "account": account,
+            "merchant": merchant,
+            "amount": parsedAmount,
+            "type": type.rawValue,
+            "categoryId": categoryId,
+            "category": category,
+            "isPending": false,
+            "isTransfer": false,
+            "isExpense": true,
+            "isEdited": false
+        ]
+        
+        // generate a unique ID for each transaction
+        let transactionId = dbRef.child("transaction").childByAutoId().key ?? "default_id"
+        
+        // save the transaction to the Firebase
+        dbRef.child("transactions/\(transactionId)").setValue(transactionDict) { error, _ in
+            if let error = error {
+                completion(false, "Failed to save transaction: \(error.localizedDescription)")
+            } else {
+                completion(true, nil)
+            }
+        }
     }
 }
