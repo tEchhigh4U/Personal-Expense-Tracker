@@ -67,13 +67,13 @@ struct NewTransactionView: View {
                     HStack {
                         Image(systemName: "building.2")
                             .foregroundColor(.gray)
-                        TextField("Institution", text: $transactionView.institution)
+                        TextField("Institution or Bank", text: $transactionView.institution)
                     }
                     
                     HStack {
                         Image(systemName: "creditcard")
                             .foregroundColor(.gray)
-                        TextField("Account", text: $transactionView.account)
+                        TextField("Account name or number", text: $transactionView.account)
                     }
                     
                     HStack {

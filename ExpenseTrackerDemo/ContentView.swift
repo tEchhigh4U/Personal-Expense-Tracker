@@ -24,7 +24,7 @@ struct ContentView: View {
                             .font(.title2)
                             .bold()
                         
-                        // MARK: Chart
+                        // MARK: Expense Chart
                         let data = transactionListVM.accumulateTransactions()
                         
                         if !data.isEmpty {
@@ -39,7 +39,7 @@ struct ContentView: View {
                             }
                             .data(data)
                             .chartStyle(ChartStyle(backgroundColor: Color.customSystemBackground, foregroundColor: ColorGradient(Color.icon.opacity(0.4), Color.icon)))
-                            .frame(height: 250)
+                            .frame(height: 300)
                             
                         }
                         

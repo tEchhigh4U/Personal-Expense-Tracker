@@ -25,6 +25,15 @@ class TransactionEntryViewModel: ObservableObject {
     var categories = Category.all
     
     private var dbRef: DatabaseReference = Database.database().reference()
+    
+    private func isExpense(categoryId: Int) -> Bool {
+        // Transfer (id: 9), Income (id: 7), and Paycheque (id: 701) are not expenses
+        return ![9, 7, 701].contains(categoryId)
+    }
+
+    private func isTransfer(categoryId: Int) -> Bool {
+        return categoryId == 9 // Transfer category id
+    }
 
     func createTransaction(completion: @escaping (Bool, String?) -> Void) {
         guard let parsedAmount = Double(amount), let categoryId = categoryId else {
@@ -32,6 +41,9 @@ class TransactionEntryViewModel: ObservableObject {
             completion(false, "Invalid amount or missing category.")
             return
         }
+        
+        let isExpense = self.isExpense(categoryId: categoryId)
+        let isTransfer = self.isTransfer(categoryId: categoryId)
 
         let transactionDict: [String: Any] = [
             "date": date,
@@ -43,8 +55,8 @@ class TransactionEntryViewModel: ObservableObject {
             "categoryId": categoryId,
             "category": category,
             "isPending": false,
-            "isTransfer": false,
-            "isExpense": true,
+            "isTransfer": isTransfer,
+            "isExpense": isExpense,
             "isEdited": false
         ]
         
