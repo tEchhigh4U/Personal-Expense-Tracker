@@ -35,7 +35,7 @@ final class TransactionListViewModel: ObservableObject {
         // Delay the completion of loading by 1 second
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.isLoading = false
-            print("Fetched \(self.transactions.count) transactions")
+            print("Refreshing page is completed. Fetched \(self.transactions.count) transactions")
         }
     }
     
@@ -51,7 +51,7 @@ final class TransactionListViewModel: ObservableObject {
                 }
 
                 let transaction = Transaction(
-                    id: value["id"] as? Int ?? 0,
+                    id: value["id"] as? UUID ?? UUID(),
                     date: value["date"] as? String ?? "",
                     institution: value["institution"] as? String ?? "",
                     account: value["account"] as? String ?? "",
@@ -77,6 +77,8 @@ final class TransactionListViewModel: ObservableObject {
                 }
                 return date1 > date2
             }
+            
+//            print("Sorted Transactions is below: \(sortedTransactions)")
             
             DispatchQueue.main.async {
                 self.transactions = sortedTransactions
@@ -148,52 +150,38 @@ final class TransactionListViewModel: ObservableObject {
 //            }
 //        }.resume()
     
-    func groupTransactionByMonth() -> TransactionGroup {
+//    func groupTransactionsByMonth() -> TransactionGroup {
+//        guard !transactions.isEmpty else { return [:] }
+//
+//        let inputFormatter = DateFormatter.allNumericUS
+//        let monthYearFormatter = DateFormatter()
+//        monthYearFormatter.dateFormat = "MMMM yyyy"
+//
+//        var dateCache = [String: Date]()
+//        let groupedTransactions = transactions.reduce(into: [String: [Transaction]]()) { (acc, transaction) in
+//            let transactionDate = dateCache[transaction.date] ?? inputFormatter.date(from: transaction.date)
+//            dateCache[transaction.date] = transactionDate // Cache it for later use
+//
+//            if let transactionDate = transactionDate {
+//                let monthYearKey = monthYearFormatter.string(from: transactionDate)
+//                acc[monthYearKey, default: []].append(transaction)
+//            }
+//        }
+//
+//        return groupedTransactions.mapValues { transactions in
+//            transactions.sorted { $0.date > $1.date }
+//        }.sorted(by: { monthYearFormatter.date(from: $0.key) ?? Date.distantPast > monthYearFormatter.date(from: $1.key) ?? Date.distantPast })
+//          .reduce(into: OrderedDictionary<String, [Transaction]>()) { (result, tuple) in
+//            result[tuple.key] = tuple.value
+//        }
+//    }
+    
+    func groupTransactionsByMonth() -> TransactionGroup {
         guard !transactions.isEmpty else { return [:] }
         
-        let dateFormatter = DateFormatter.allNumericUS
-        let displayFormatter = DateFormatter()
-        displayFormatter.dateFormat = "MMMM yyyy"
-        
-        // Group transactions by month
-        var tempGroupedTransactions = [String: [Transaction]]()
-        
-        for transaction in transactions {
-            if let date = dateFormatter.date(from: transaction.date) {
-                let monthYearString = displayFormatter.string(from: date)
-                if tempGroupedTransactions[monthYearString] == nil {
-                    tempGroupedTransactions[monthYearString] = []
-                }
-                tempGroupedTransactions[monthYearString]?.append(transaction)
-            }
-        }
-        
-        // Sort transactions within each group by date in descending order
-        for (key, value) in tempGroupedTransactions {
-            tempGroupedTransactions[key] = value.sorted(by: {
-                guard let date1 = dateFormatter.date(from: $0.date),
-                      let date2 = dateFormatter.date(from: $1.date) else {
-                    return false
-                }
-                return date1 > date2
-            })
-        }
-        
-        // Create an OrderedDictionary from the sorted groups
-        let sortedKeys = tempGroupedTransactions.keys.sorted { (month1, month2) -> Bool in
-            guard let date1 = displayFormatter.date(from: month1),
-                  let date2 = displayFormatter.date(from: month2) else {
-                return false
-            }
-            return date1 > date2
-        }
-        
-        var orderGroupedTransactions = TransactionGroup()
-        for key in sortedKeys {
-            orderGroupedTransactions[key] = tempGroupedTransactions[key]
-        }
-        
-        return orderGroupedTransactions
+        let groupedTransactions = TransactionGroup(grouping: transactions) { $0.month }
+     
+        return groupedTransactions
     }
     
     func accumulateTransactions() -> TransactionPrefixSum {
@@ -204,7 +192,7 @@ final class TransactionListViewModel: ObservableObject {
         // MARK: update the actual date when publishing the application
 //        let today = "02/17/2022".dateParsed() // Date()
         let today = todayString.dateParsed()
-        print("today is", today)
+        print("today's date is", today)
         let dateInterval = Calendar.current.dateInterval(of: .month, for: today)!
         print("dateInterval", dateInterval)
         

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUIFontIcon
 
 struct Transaction: Identifiable, Codable, Hashable {
-    let id: Int
+    let id: UUID
     let date: String
     let institution: String
     let account: String
