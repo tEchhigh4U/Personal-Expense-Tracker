@@ -12,23 +12,22 @@ struct TransactionList: View {
     
     var body: some View {
         VStack {
-            List{
-                // Mark: transaction Groups
-                ForEach(Array(transactionListVM.groupTransactionByMonth()), id:\.key){ month,
-                    transactions in
-                    Section{
-                        // Mark: Transaction List
+            List {
+                // MARK: Iterating through grouped transactions
+                ForEach(Array(transactionListVM.groupTransactionsByMonth()), id: \.key) { month, transactions in
+                    Section {
+                        // MARK: transaction List
                         ForEach(transactions) { transaction in
                             TransactionRow(transaction: transaction)
                         }
                     } header: {
+                        // MARK: transaction Month
                         Text(month)
                     }
                     .listSectionSeparator(.hidden)
                 }
             }
             .listStyle(.plain)
-            
         }
         .navigationTitle("Transactions")
         .navigationBarTitleDisplayMode(.inline)
@@ -37,19 +36,19 @@ struct TransactionList: View {
 
 struct TransactionList_Previews: PreviewProvider {
     static let transactionListVM: TransactionListViewModel = {
-        let transactioinListVM  = TransactionListViewModel()
-        transactioinListVM.transactions = transactionListPreviewData
-        return transactioinListVM
+        let transactionListVM = TransactionListViewModel()
+        transactionListVM.transactions = transactionListPreviewData // Ensure this data is properly formatted and populated
+        return transactionListVM
     }()
     
     static var previews: some View {
         Group {
-            NavigationView{
+            NavigationView {
                 TransactionList()
             }
-            NavigationView{
+            NavigationView {
                 TransactionList()
-                    .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
+                    .preferredColorScheme(.dark)
             }
         }
         .environmentObject(transactionListVM)

@@ -27,6 +27,9 @@ extension DateFormatter{
     }()
 }
 
+// Get today's date as a formatted string
+let todayString = Date().formatted()
+
 extension String {
     func dateParsed() -> Date {
         guard let parsedDate = DateFormatter.allNumericUS.date(from: self) else { return Date()}

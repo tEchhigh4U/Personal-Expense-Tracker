@@ -78,3 +78,6 @@ SortedCFDatabase.def
 htmlcov
 .coverage
 /benchmark/scripts/Benchmark_Driverc
+
+# Ignore Firebase service file
+**/GoogleService-Info.plist

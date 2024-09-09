@@ -33,8 +33,7 @@ struct RecentTransactionList: View {
             .padding()
             
             // Mark: Recent Transaction List
-            ForEach(Array(transactionListVM.transactions.prefix(5).enumerated()), id:
-                        \.element){index, transaction in
+            ForEach(Array(transactionListVM.transactions.prefix(5).enumerated()), id:\.element){index, transaction in
                 TransactionRow(transaction: transaction)
                 
                 // Seperate each row clearly for better readibilty

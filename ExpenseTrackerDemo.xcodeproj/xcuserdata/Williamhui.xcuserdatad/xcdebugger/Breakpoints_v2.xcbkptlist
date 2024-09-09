@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "886072C6-A9DF-441B-A279-2377E5EC596F"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0320119D-4F1A-4E6F-A99B-465787B799CD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ExpenseTrackerDemo/TransactionListViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "TransactionListViewModel"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C2D3AD2A-92E8-46E1-BB36-2AB6B3B6DCDD"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ExpenseTrackerDemo/ExpenseTrackerDemoApp.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "11"
+            endingLineNumber = "11"
+            landmarkName = "AppDelegate"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "C2D3AD2A-92E8-46E1-BB36-2AB6B3B6DCDD - 6f9cc5c7a2842770"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ExpenseTrackerDemo.AppDelegate.__allocating_init() -&gt; ExpenseTrackerDemo.AppDelegate"
+                  moduleName = "ExpenseTrackerDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Williamhui/Code/self-project%20repro/ExpenseTrackerDemo/ExpenseTrackerDemo/ExpenseTrackerDemo/ExpenseTrackerDemoApp.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "C2D3AD2A-92E8-46E1-BB36-2AB6B3B6DCDD - 88b32b2699caa47e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ExpenseTrackerDemo.AppDelegate.init() -&gt; ExpenseTrackerDemo.AppDelegate"
+                  moduleName = "ExpenseTrackerDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Williamhui/Code/self-project%20repro/ExpenseTrackerDemo/ExpenseTrackerDemo/%3Ccompiler-generated%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "C2D3AD2A-92E8-46E1-BB36-2AB6B3B6DCDD - 4ca80c1db70a995"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ExpenseTrackerDemo.AppDelegate.__deallocating_deinit"
+                  moduleName = "ExpenseTrackerDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Williamhui/Code/self-project%20repro/ExpenseTrackerDemo/ExpenseTrackerDemo/ExpenseTrackerDemo/ExpenseTrackerDemoApp.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "91F799C9-5ADF-4C40-BD74-EBEAE424B4A6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ExpenseTrackerDemo/ExpenseTrackerDemoApp.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "12"
+            endingLineNumber = "12"
+            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
