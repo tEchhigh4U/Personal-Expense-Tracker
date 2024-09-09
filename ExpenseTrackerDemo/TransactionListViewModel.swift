@@ -49,9 +49,11 @@ final class TransactionListViewModel: ObservableObject {
                 guard let value = child.value as? [String: Any] else {
                     continue
                 }
+                
+                let transactionId = value["id"] as? UUID ?? UUID() // Ensure we have a string ID
 
                 let transaction = Transaction(
-                    id: value["id"] as? UUID ?? UUID(),
+                    id: transactionId,
                     date: value["date"] as? String ?? "",
                     institution: value["institution"] as? String ?? "",
                     account: value["account"] as? String ?? "",
@@ -77,8 +79,6 @@ final class TransactionListViewModel: ObservableObject {
                 }
                 return date1 > date2
             }
-            
-//            print("Sorted Transactions is below: \(sortedTransactions)")
             
             DispatchQueue.main.async {
                 self.transactions = sortedTransactions

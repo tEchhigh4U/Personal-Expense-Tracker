@@ -44,8 +44,10 @@ class TransactionEntryViewModel: ObservableObject {
         
         let isExpense = self.isExpense(categoryId: categoryId)
         let isTransfer = self.isTransfer(categoryId: categoryId)
+        let transactionId = UUID().uuidString
 
         let transactionDict: [String: Any] = [
+            "id": transactionId,
             "date": date,
             "institution": institution,
             "account": account,
@@ -60,10 +62,7 @@ class TransactionEntryViewModel: ObservableObject {
             "isEdited": false
         ]
         
-        // generate a unique ID for each transaction
-        let transactionId = dbRef.child("transaction").childByAutoId().key ?? "default_id"
-        
-        // save the transaction to the Firebase
+        // save the transaction to the Firebase using the UUID
         dbRef.child("transactions/\(transactionId)").setValue(transactionDict) { error, _ in
             if let error = error {
                 completion(false, "Failed to save transaction: \(error.localizedDescription)")
