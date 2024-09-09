@@ -15,10 +15,32 @@ typealias TransactionPrefixSum = [(String, Double)] // a record of accumulated s
 
 final class TransactionListViewModel: ObservableObject {
     @Published var transactions: [Transaction] = []  // initialized empty object
+    @Published var searchText = ""
     @Published var isLoading = false
     
     private var ref: DatabaseReference = Database.database().reference()
     private var cancellables = Set<AnyCancellable>() // empty object
+    
+    var filteredTransactions: [Transaction] {
+            if searchText.isEmpty {
+                return transactions
+            } else {
+                return transactions.filter { transaction in
+                    // Check for matches in text fields
+                    let textMatches = transaction.merchant.lowercased().contains(searchText.lowercased()) ||
+                                      transaction.category.lowercased().contains(searchText.lowercased()) ||
+                                      transaction.institution.lowercased().contains(searchText.lowercased()) ||
+                                      transaction.account.lowercased().contains(searchText.lowercased()) ||
+                                      transaction.date.contains(searchText)  // Direct string comparison for dates
+
+                    // Check for matches in numeric fields (amount)
+                    let amountString = String(format: "%.2f", transaction.amount)  // Convert to string with two decimal places
+                    let amountMatches = amountString.contains(searchText)
+
+                    return textMatches || amountMatches
+                }
+            }
+        }
     
     // init method
     init(){
@@ -179,7 +201,7 @@ final class TransactionListViewModel: ObservableObject {
     func groupTransactionsByMonth() -> TransactionGroup {
         guard !transactions.isEmpty else { return [:] }
         
-        let groupedTransactions = TransactionGroup(grouping: transactions) { $0.month }
+        let groupedTransactions = TransactionGroup(grouping: filteredTransactions) { $0.month }
      
         return groupedTransactions
     }
