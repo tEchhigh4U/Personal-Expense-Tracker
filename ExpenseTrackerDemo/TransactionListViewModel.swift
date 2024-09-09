@@ -26,12 +26,11 @@ final class TransactionListViewModel: ObservableObject {
     }
     
     func refreshTransactions() {
+        print("Page is refreshing now...")
         isLoading = true
         
         // call related function globally
         observeTransactions()
-        accumulateTransactions()
-        groupTransactionByMonth()
 
         // Delay the completion of loading by 1 second
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
