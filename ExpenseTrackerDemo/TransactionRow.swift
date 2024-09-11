@@ -10,6 +10,7 @@ import SwiftUIFontIcon
 
 struct TransactionRow: View {
     var transaction: Transaction
+    var onDoubleClick: () -> Void  // Action to perform on double click
     
     var body: some View {
         HStack(spacing: 20){
@@ -48,6 +49,7 @@ struct TransactionRow: View {
                 .foregroundStyle(transaction.type == TransactionType.credit.rawValue ? Color.text : .primary)
         }
         .padding([.top, .bottom],8)
+        .onTapGesture(count: 2, perform: onDoubleClick) // Handle double click
 
     }
 }
@@ -56,11 +58,15 @@ struct Preview: PreviewProvider {
     static var previews: some View {
         Group {
             // Preview in light mode (default)
-            TransactionRow(transaction: transactionPreviewData)
+            TransactionRow(transaction: transactionPreviewData, onDoubleClick: {
+                print("Transaction clicked.")
+            })
 
             // Preview in dark mode
-            TransactionRow(transaction: transactionPreviewData)
-                .preferredColorScheme(.dark)
+            TransactionRow(transaction: transactionPreviewData, onDoubleClick: {
+                print("Transaction clicked.")
+            })
+            .preferredColorScheme(.dark)
         }
     }
 }

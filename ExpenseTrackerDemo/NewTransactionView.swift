@@ -86,6 +86,7 @@ struct NewTransactionView: View {
                         Image(systemName: "dollarsign.circle")
                             .foregroundColor(.gray)
                         TextField("Amount(HKD)", text: $transactionView.amount)
+                            .keyboardType(.numberPad)
                     }
                     
                     Picker("Type", selection: $transactionView.type) {
@@ -113,8 +114,8 @@ struct NewTransactionView: View {
                 
                 Section {
                     Button(action: {
-                        transactionView.date = DateFormatter.allNumericUS.string(from: transactionDate)
-                        transactionView.createTransaction { success, errorMessage in
+                        transactionView.createdAt = DateFormatter.allNumericUS.string(from: transactionDate)
+                        transactionView.saveTransaction { success, errorMessage in
                             if success {
                                 alertType = .success
                             } else {

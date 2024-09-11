@@ -13,7 +13,7 @@ let transactionId = UUID(uuidString: uuidString) ?? UUID()
 // Creating a Transaction instance with the correct parameter types
 var transactionPreviewData = Transaction(
     id: transactionId,
-    date: "13/08/2024",
+    createdAt: "13/08/2024",
     institution: "HSBC HONG KONG",
     account: "Visa HSBC HONG KONG",
     merchant: "Apple",

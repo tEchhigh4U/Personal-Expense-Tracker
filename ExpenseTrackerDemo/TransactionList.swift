@@ -10,45 +10,56 @@ import SwiftUI
 struct TransactionList: View {
     @EnvironmentObject var transactionListVM: TransactionListViewModel
     @FocusState private var isTextFieldFocused: Bool
+    
     @State private var searchText = ""
+    @State private var activeTransaction: Transaction?
+    @State private var isNavigationActive = false
     
     var body: some View {
-        VStack {
-            // MARK: Search bar
-            TextField("Search transactions...", text: $transactionListVM.searchText)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.horizontal, 10)
-                .padding(.top, 12)
-                .focused($isTextFieldFocused) // Bind the focus state to the text field
-                .onAppear {
-                    // Optionally set the focus when the view appears
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.isTextFieldFocused = true
-                    }
-                }
-            
-            Spacer()
-            
-            List {
-                // MARK: Iterating through grouped transactions
-                ForEach(Array(transactionListVM.groupTransactionsByMonth()), id: \.key) { month, transactions in
-                    Section {
-                        // MARK: transaction List
-                        ForEach(transactions) { transaction in
-                            TransactionRow(transaction: transaction)
+        NavigationView {
+                    VStack {
+                        // MARK: Search bar
+                        TextField("Search transactions...", text: $transactionListVM.searchText)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.horizontal, 10)
+                            .padding(.top, 12)
+                            .focused($isTextFieldFocused) // Bind the focus state to the text field
+                            .onAppear {
+                                // Optionally set the focus when the view appears
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    self.isTextFieldFocused = true
+                                }
+                            }
+                        
+                        Spacer()
+                        
+                        List {
+                            // MARK: Transaction list
+                            ForEach(Array(transactionListVM.groupTransactionsByMonth()), id: \.key) { month, transactions in
+                                Section {
+                                    ForEach(transactions) { transaction in
+                                        TransactionRow(transaction: transaction) {
+                                            self.activeTransaction = transaction
+                                            self.isNavigationActive = true
+                                        }
+                                    }
+                                } header: {
+                                    Text(month)
+                                }
+                            }
                         }
-                    } header: {
-                        // MARK: transaction Month
-                        Text(month)
+                        .listStyle(.plain)
                     }
-                    .listSectionSeparator(.hidden)
+                    .background(
+                        NavigationLink(destination: activeTransaction.map { EditTransactionView(transactionView: TransactionEntryViewModel(transaction: $0)) }, isActive: $isNavigationActive) {
+                                            EmptyView()
+                                        }
+                                        .hidden()
+                    )
+                    .navigationTitle("Transactions")
+                    .navigationBarTitleDisplayMode(.inline)
                 }
             }
-            .listStyle(.plain)
-        }
-        .navigationTitle("Transactions")
-        .navigationBarTitleDisplayMode(.inline)
-    }
 }
 
 struct TransactionList_Previews: PreviewProvider {
@@ -71,3 +82,5 @@ struct TransactionList_Previews: PreviewProvider {
         .environmentObject(transactionListVM)
     }
 }
+
+

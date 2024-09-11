@@ -10,11 +10,11 @@ import SwiftUIFontIcon
 
 struct Transaction: Identifiable, Codable, Hashable {
     let id: UUID
-    let date: String
+    var createdAt: String
     let institution: String
     let account: String
     var merchant: String
-    let amount: Double
+    var amount: Double
     let type: TransactionType.RawValue
     var categoryId: Int
     var category: String
@@ -27,13 +27,12 @@ struct Transaction: Identifiable, Codable, Hashable {
         if let category = Category.all.first(where: { $0.id == categoryId}) {
             return category.icon
         }
-        
         return .question
     }
     
     // Computed property to parse date string to Date    
     var dateParsed: Date {
-        return date.dateParsed()
+        return createdAt.dateParsed()
     }
     
     var signedAmount: Double {
@@ -50,7 +49,7 @@ enum TransactionType: String, CaseIterable {
     case credit = "credit"
 }
 
-struct Category {
+struct Category: Identifiable {
     let id: Int
     let name: String
     let icon: FontAwesomeCode
