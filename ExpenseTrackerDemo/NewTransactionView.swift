@@ -115,7 +115,7 @@ struct NewTransactionView: View {
                 Section {
                     Button(action: {
                         transactionView.createdAt = DateFormatter.allNumericUS.string(from: transactionDate)
-                        transactionView.saveTransaction { success, errorMessage in
+                        transactionView.saveNewTransaction { success, errorMessage in
                             if success {
                                 alertType = .success
                             } else {

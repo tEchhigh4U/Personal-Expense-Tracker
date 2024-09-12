@@ -71,16 +71,16 @@ struct ContentView: View {
                 
                 // MARK: Create a new transaction record
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Menu {
-                    Button("Create a new record", action: {
-                    self.isShowingNewRecordView = true
-                })
-                    } label: {
-                        Image(systemName: "line.horizontal.3")
-                            .imageScale(.large)
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(Color.customIcon, .primary)
-                    }}
+                    Button(action: {
+                        self.isShowingNewRecordView = true
+                    }) {
+                        Image(systemName: "plus.circle.fill")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(.customSystemBackground)
+                            .background(Circle().fill(Color.white).shadow(radius: 3))
+                    }
+                }
             }
             .navigationDestination(isPresented: $isShowingNewRecordView) {
                 NewTransactionView()

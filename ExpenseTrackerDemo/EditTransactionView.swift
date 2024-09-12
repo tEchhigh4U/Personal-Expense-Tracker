@@ -16,6 +16,8 @@ struct EditTransactionView: View {
     @State private var selectedDate: Date
     @State private var selectedCategoryId: Int
     @State private var showingCategoryGrid = false
+    @State private var showingDeleteConfirmation = false
+    @State private var showDatePicker = false
     
     init(transactionView: TransactionEntryViewModel) {
         self.transactionView = transactionView
@@ -28,22 +30,67 @@ struct EditTransactionView: View {
         NavigationView {
             Form {
                 Section(header: Text("Transaction Details")) {
-                    TextField("Enter merchant name", text: $transactionView.merchant)
-                        .keyboardType(.default)
-                    
-                    TextField("Amount (HKD)", value: $amount, format: .currency(code: "HKD"))
-                        .keyboardType(.decimalPad)
-                        .onChange(of: amount) { newValue in
-                            transactionView.amount = String(format: "%.2f", newValue)
+                    Button(action: {
+                        withAnimation {
+                            self.showDatePicker.toggle()
                         }
-                    
-                    DatePicker("Date", selection: $selectedDate, displayedComponents: .date)
-                        .onChange(of: selectedDate) { newDate in
-                            transactionView.createdAt = DateFormatter.allNumericUS.string(from: newDate)
+                    }) {
+                        HStack {
+                            Image(systemName: "calendar")
+                                .foregroundColor(.gray)
+                            Text("Date: \(selectedDate, formatter: DateFormatter.allNumericUS)")
+                                .foregroundColor(.primary)
                         }
+                    }
+                    
+                    if showDatePicker {
+                        DatePicker(
+                            "Select Date",
+                            selection: $selectedDate,
+                            displayedComponents: .date
+                        )
+                        .datePickerStyle(.wheel)
+                    }
+                    
+                    HStack {
+                        Image(systemName: "building.2")
+                            .foregroundColor(.gray)
+                        TextField("Institution or Bank", text: $transactionView.institution)
+                    }
+                    
+                    HStack {
+                        Image(systemName: "creditcard")
+                            .foregroundColor(.gray)
+                        TextField("Account name or number", text: $transactionView.account)
+                    }
+                    
+                    HStack {
+                        Image(systemName: "cart")
+                            .foregroundColor(.gray)
+                        TextField("Merchant", text: $transactionView.merchant)
+                    }
+                    
+                    HStack {
+                        Image(systemName: "dollarsign.circle")
+                            .foregroundColor(.gray)
+                        TextField("Amount (HKD)", value: $amount, format: .currency(code: "HKD"))
+                            .keyboardType(.decimalPad)
+                            .onChange(of: amount) { newValue in
+                                transactionView.amount = String(format: "%.2f", newValue)
+                            }
+                    }
+                    
+                    
                 }
                 
                 Section(header: Text("Category")) {
+                    Picker("Type", selection: $transactionView.type) {
+                        Text("Select a type").tag(Int?.none)
+                        ForEach(TransactionType.allCases, id: \.self) { type in
+                            Text(type.rawValue).tag(type)
+                        }
+                    }
+                    
                     Button(action: {
                         showingCategoryGrid = true
                     }) {
@@ -58,12 +105,10 @@ struct EditTransactionView: View {
                         CategoryGridView(selectedCategoryId: $selectedCategoryId)
                     }
                 }
-            }
-            .navigationTitle("Edit Transaction")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
+                
+                Section {
+                    Button(action: {
+                        transactionView.createdAt = DateFormatter.allNumericUS.string(from: selectedDate)
                         transactionView.saveTransaction { success, errorMessage in
                             if success {
                                 alertType = .success
@@ -71,9 +116,44 @@ struct EditTransactionView: View {
                                 alertType = .error(errorMessage ?? "An unknown error occurred.")
                             }
                         }
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.clockwise.circle.fill")
+                                .foregroundColor(.green)
+                            Text("Update Transaction")
+                                .fontWeight(.bold)
+                        }
                     }
                 }
             }
+            }
+            .navigationTitle("Edit Transaction")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                Button(action: {
+                                    showingDeleteConfirmation = true
+                                }) {
+                                    Image(systemName: "trash")
+                                        .imageScale(.medium)
+                                        .font(.system(size: 20))
+                                        .foregroundColor(.red)
+                                }
+                            }
+                        }
+                        .confirmationDialog("Are you sure you want to delete this transaction?", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
+                            Button("Delete", role: .destructive) {
+                                transactionView.deleteTransaction { success, errorMessage in
+                                    if success {
+                                        alertType = .success
+                                        presentationMode.wrappedValue.dismiss()
+                                    } else {
+                                        alertType = .error(errorMessage ?? "An unknown error occurred.")
+                                    }
+                                }
+                            }
+                            Button("Cancel", role: .cancel) {}
+                        }
             .onAppear {
                 print("Transaction ID: \(transactionView.transactionId ?? "nil")")
                 guard let transactionIdString = transactionView.transactionId else {
@@ -101,7 +181,6 @@ struct EditTransactionView: View {
             }
         }
     }
-}
 
 struct EditTransactionView_Previews: PreviewProvider {
     static var previews: some View {

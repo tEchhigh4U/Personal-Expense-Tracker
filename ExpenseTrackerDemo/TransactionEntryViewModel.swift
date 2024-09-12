@@ -110,4 +110,53 @@ class TransactionEntryViewModel: ObservableObject {
             }
         }
     }
+    
+    func saveNewTransaction(completion: @escaping (Bool, String?) -> Void) {
+        guard let parsedAmount = Double(amount), let categoryId = categoryId else {
+            completion(false, "Invalid amount or missing category ID.")
+            return
+        }
+        
+        // Generate a new transaction ID or handle it outside this function
+        let newTransactionId = UUID().uuidString.lowercased()
+        
+        let newTransactionDict: [String: Any] = [
+            "id": newTransactionId,
+            "date": createdAt,
+            "institution": institution,
+            "account": account,
+            "merchant": merchant,
+            "amount": parsedAmount,
+            "type": type.rawValue,
+            "categoryId": categoryId,
+            "category": category,
+            "isPending": true,  // Assuming new transactions might be pending initially
+            "isTransfer": categoryId == 9,
+            "isExpense": ![9, 7, 701].contains(categoryId),
+            "isEdited": false  // Assuming new transactions are not edited at the time of creation
+        ]
+        
+        dbRef.child("transactions").child(newTransactionId).setValue(newTransactionDict) { error, _ in
+            if let error = error {
+                completion(false, "Failed to save new transaction: \(error.localizedDescription)")
+            } else {
+                completion(true, nil)
+            }
+        }
+    }
+    
+    func deleteTransaction(completion: @escaping (Bool, String?) -> Void) {
+        guard let transactionId = transactionId?.lowercased() else {
+            completion(false, "Missing transaction ID.")
+            return
+        }
+
+        dbRef.child("transactions").child(transactionId).removeValue { error, _ in
+            if let error = error {
+                completion(false, "Failed to delete transaction: \(error.localizedDescription)")
+            } else {
+                completion(true, nil)
+            }
+        }
+    }
 }
