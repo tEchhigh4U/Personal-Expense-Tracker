@@ -8,7 +8,7 @@
 import Foundation
 
 let uuidString = "9215cb5f12bd4a17a812c59b0e6d1985"
-let transactionId = UUID(uuidString: uuidString) ?? UUID()
+let transactionId = uuidString
 
 // Creating a Transaction instance with the correct parameter types
 var transactionPreviewData = Transaction(

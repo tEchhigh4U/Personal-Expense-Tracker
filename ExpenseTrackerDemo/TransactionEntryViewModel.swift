@@ -29,7 +29,7 @@ class TransactionEntryViewModel: ObservableObject {
 
     init(transaction: Transaction? = nil) {
         if let transaction = transaction {
-            self.transactionId = transaction.id.uuidString  // Assuming `transaction.id` is a String already
+            self.transactionId = transaction.id
             self.createdAt = transaction.createdAt
             self.institution = transaction.institution
             self.account = transaction.account
@@ -41,53 +41,53 @@ class TransactionEntryViewModel: ObservableObject {
         }
     }
     
-    func loadTransactionData() {
-        guard let transactionId = transactionId else {
-            print("No transaction ID provided.")
-            self.errorMessage = "No transaction ID provided."
-            return
-        }
-        
-        dbRef.child("transactions").child(transactionId).observeSingleEvent(of: .value, with: { snapshot in
+    func loadTransactionData(for transactionId: String, completion: @escaping (String) -> Void) {
+        let lowerCaseTransactionId = transactionId.lowercased()
+        dbRef.child("transactions").child(lowerCaseTransactionId).observeSingleEvent(of: .value, with: { [weak self] snapshot in
+            guard let self = self else { return }
+
             if snapshot.exists() {
-                print("Snapshot data: \(snapshot)")
-                DispatchQueue.main.async {
-                    self.updateData(from: snapshot)
-                }
+                self.updateData(from: snapshot)
+                completion(transactionId)
             } else {
-                print("No data found for transaction ID \(transactionId)")
                 DispatchQueue.main.async {
                     self.errorMessage = "No data found for the specified transaction ID."
+                    print(self.errorMessage ?? "Error without message")
                 }
             }
-        }) { error in
-            print("Error fetching data: \(error.localizedDescription)")
+        }) { [weak self] error in
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 self.errorMessage = error.localizedDescription
+                print("Firebase error: \(self.errorMessage ?? "unknown error")")
             }
         }
     }
 
     private func updateData(from snapshot: DataSnapshot) {
-        if let data = snapshot.value as? [String: Any] {
-            print("Data dictionary: \(data)")
-            self.merchant = data["merchant"] as? String ?? ""
-            self.amount = data["amount"] as? String ?? ""
-            self.createdAt = data["createdAt"] as? String ?? ""
-            self.categoryId = data["categoryId"] as? Int
-        } else {
-            print("Error: Data fetched is not in the expected format")
+        guard let data = snapshot.value as? [String: Any] else {
             self.errorMessage = "Data fetched is not in the expected format"
+            return
+        }
+
+        DispatchQueue.main.async {
+            self.merchant = data["merchant"] as? String ?? ""
+            if let amount = data["amount"] as? Double {
+                self.amount = String(amount)
+            }
+            self.createdAt = data["date"] as? String ?? ""
+            self.categoryId = data["categoryId"] as? Int
         }
     }
     
     func saveTransaction(completion: @escaping (Bool, String?) -> Void) {
-        guard let parsedAmount = Double(amount), let categoryId = categoryId else {
-            completion(false, "Invalid amount or missing category.")
+        guard let parsedAmount = Double(amount), let categoryId = categoryId, let transactionId = transactionId?.lowercased() else {
+            completion(false, "Invalid amount, category, or missing transaction ID.")
             return
         }
         
         let transactionDict: [String: Any] = [
+            "id": transactionId,
             "date": createdAt,
             "institution": institution,
             "account": account,
@@ -102,13 +102,10 @@ class TransactionEntryViewModel: ObservableObject {
             "isEdited": true
         ]
         
-        let transactionPath = transactionId ?? UUID().uuidString  // Use existing ID or generate a new one
-        
-        dbRef.child("transactions").child(transactionPath).setValue(transactionDict) { error, _ in
+        dbRef.child("transactions").child(transactionId).updateChildValues(transactionDict) { error, _ in
             if let error = error {
-                completion(false, "Failed to save transaction: \(error.localizedDescription)")
+                completion(false, "Failed to update transaction: \(error.localizedDescription)")
             } else {
-                self.transactionId = transactionPath  // Ensure the ID is updated/assigned
                 completion(true, nil)
             }
         }

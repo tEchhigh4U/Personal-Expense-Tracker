@@ -12,7 +12,7 @@ struct EditTransactionView: View {
     @ObservedObject var transactionView: TransactionEntryViewModel
     
     @State private var alertType: AlertType?
-    @State private var amount: Double = 0.0
+    @State private var amount: Double
     @State private var selectedDate: Date
     @State private var selectedCategoryId: Int
     @State private var showingCategoryGrid = false
@@ -21,11 +21,11 @@ struct EditTransactionView: View {
         self.transactionView = transactionView
         _amount = State(initialValue: Double(transactionView.amount) ?? 0)
         _selectedDate = State(initialValue: transactionView.createdAt.dateParsed())
-        _selectedCategoryId = State(initialValue: transactionView.categoryId!)
+        _selectedCategoryId = State(initialValue: transactionView.categoryId ?? 0)
     }
     
     var body: some View {
-        NavigationStack {
+        NavigationView {
             Form {
                 Section(header: Text("Transaction Details")) {
                     TextField("Enter merchant name", text: $transactionView.merchant)
@@ -42,55 +42,69 @@ struct EditTransactionView: View {
                             transactionView.createdAt = DateFormatter.allNumericUS.string(from: newDate)
                         }
                 }
-                    
-                    Section(header: Text("Category")) {
-                        Button(action: {
-                            showingCategoryGrid = true
-                        }) {
-                            HStack {
-                                Text("Category")
-                                Spacer()
-                                Text(Category.all.first { $0.id == selectedCategoryId }?.name ?? "Select")
-                                    .foregroundColor(.gray)
-                            }
-                        }
-                        .sheet(isPresented: $showingCategoryGrid) {
-                            CategoryGridView(selectedCategoryId: $selectedCategoryId)
+                
+                Section(header: Text("Category")) {
+                    Button(action: {
+                        showingCategoryGrid = true
+                    }) {
+                        HStack {
+                            Text("Category")
+                            Spacer()
+                            Text(Category.all.first { $0.id == selectedCategoryId }?.name ?? "Select")
+                                .foregroundColor(.gray)
                         }
                     }
-                    .onChange(of: selectedCategoryId) { newValue in
-                        transactionView.categoryId = newValue
-                        print("Category updated: \(newValue)")
+                    .sheet(isPresented: $showingCategoryGrid) {
+                        CategoryGridView(selectedCategoryId: $selectedCategoryId)
                     }
                 }
-                .navigationTitle("Edit Transaction")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Save") {
-                            transactionView.saveTransaction { success, errorMessage in
-                                if success {
-                                    alertType = .success
-                                } else {
-                                    alertType = .error(errorMessage ?? "An unknown error occurred.")
-                                }
+            }
+            .navigationTitle("Edit Transaction")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        transactionView.saveTransaction { success, errorMessage in
+                            if success {
+                                alertType = .success
+                            } else {
+                                alertType = .error(errorMessage ?? "An unknown error occurred.")
                             }
                         }
                     }
                 }
-                .onAppear {
-                    // Check if a transaction ID exists and if not, possibly set it or handle accordingly
-                    if transactionView.transactionId != nil {
-                        transactionView.loadTransactionData()
+            }
+            .onAppear {
+                print("Transaction ID: \(transactionView.transactionId ?? "nil")")
+                guard let transactionIdString = transactionView.transactionId else {
+                    DispatchQueue.main.async {
+                        print("Invalid or missing transactionId: \(transactionView.transactionId ?? "nil")")
                     }
+                    return
+                }
+
+                transactionView.loadTransactionData(for: transactionIdString) { loadedTransactionId in
+                    DispatchQueue.main.async {
+                        print("Transaction ID loaded for editing: \(loadedTransactionId)")
+                    }
+                }
+            }
+            .alert(item: $alertType) { alertType in
+                switch alertType {
+                case .success:
+                    return Alert(title: Text("Success"), message: Text("Transaction saved successfully"), dismissButton: .default(Text("OK"), action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }))
+                case .error(let message):
+                    return Alert(title: Text("Error"), message: Text(message), dismissButton: .default(Text("OK")))
                 }
             }
         }
     }
+}
 
-// Preview
 struct EditTransactionView_Previews: PreviewProvider {
     static var previews: some View {
         EditTransactionView(transactionView: TransactionEntryViewModel())
     }
 }
-

@@ -78,7 +78,7 @@ final class TransactionListViewModel: ObservableObject {
                 let transactionId = UUID(uuidString: value["id"] as? String ?? "") ?? UUID()
                 
                 let transaction = Transaction(
-                    id: transactionId,
+                    id: transactionId.uuidString,
                     createdAt: value["date"] as? String ?? "",
                     institution: value["institution"] as? String ?? "",
                     account: value["account"] as? String ?? "",
@@ -256,7 +256,7 @@ final class TransactionListViewModel: ObservableObject {
     private func createTransactionFromDictionary(_ value: [String: Any]) -> Transaction {
         let transactionId = UUID(uuidString: value["id"] as? String ?? "") ?? UUID()
         return Transaction(
-            id: transactionId,
+            id: transactionId.uuidString,
             createdAt: value["date"] as? String ?? "",
             institution: value["institution"] as? String ?? "",
             account: value["account"] as? String ?? "",
