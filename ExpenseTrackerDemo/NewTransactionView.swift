@@ -51,7 +51,7 @@ struct NewTransactionView: View {
                             Image(systemName: "calendar")
                                 .foregroundColor(.gray)
                             Text("Date: \(transactionDate, formatter: DateFormatter.allNumericUS)")
-                                .foregroundColor(.black)
+                                .foregroundColor(.primary)
                         }
                     }
                     
