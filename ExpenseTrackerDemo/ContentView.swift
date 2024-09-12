@@ -77,7 +77,7 @@ struct ContentView: View {
                         Image(systemName: "plus.circle.fill")
                             .resizable()
                             .frame(width: 28, height: 28)
-                            .foregroundColor(.customSystemBackground)
+                            .foregroundColor(.primary)
                             .background(Circle().fill(Color.white).shadow(radius: 3))
                     }
                 }
