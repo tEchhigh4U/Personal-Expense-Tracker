@@ -39,9 +39,7 @@ struct NewTransactionView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: 
-                            Text("Transaction Details")
-                                    .font(.subheadline) ){
+                Section(header: Text("Transaction Details")){
                     Button(action: {
                         withAnimation {
                             self.showDatePicker.toggle()
@@ -51,7 +49,7 @@ struct NewTransactionView: View {
                             Image(systemName: "calendar")
                                 .foregroundColor(.gray)
                             Text("Date: \(transactionDate, formatter: DateFormatter.allNumericUS)")
-                                .foregroundColor(.black)
+                                .foregroundColor(.primary)
                         }
                     }
                     
@@ -86,35 +84,38 @@ struct NewTransactionView: View {
                         Image(systemName: "dollarsign.circle")
                             .foregroundColor(.gray)
                         TextField("Amount(HKD)", text: $transactionView.amount)
-                    }
-                    
-                    Picker("Type", selection: $transactionView.type) {
-                        Text("Select a type").tag(Int?.none)
-                        ForEach(TransactionType.allCases, id: \.self) { type in
-                            Text(type.rawValue).tag(type)
-                        }
-                    }
-                    
-                    Picker("Category", selection: $transactionView.categoryId) {
-                        Text("Select a category").tag(Int?.none)
-                        ForEach(transactionView.categories, id: \.id) { category in
-                            Text(category.name).tag(category.id as Int?)
-                        }
-                    }
-                    .onChange(of: transactionView.categoryId) { oldValue, newValue in
-                        if let categoryId = newValue,
-                           let selectedCategory = transactionView.categories.first(where: { $0.id == categoryId }) {
-                            transactionView.category = selectedCategory.name
-                        } else {
-                            transactionView.category = ""
-                        }
+                            .keyboardType(.numberPad)
                     }
                 }
                 
+                Section(header: Text("Type & Category")) {
+                        Picker("Type", selection: $transactionView.type) {
+                            Text("Select a type").tag(Int?.none)
+                            ForEach(TransactionType.allCases, id: \.self) { type in
+                                Text(type.rawValue).tag(type)
+                            }
+                        }
+
+                        Picker("Category", selection: $transactionView.categoryId) {
+                            Text("Select a category").tag(Int?.none)
+                            ForEach(transactionView.categories, id: \.id) { category in
+                                Text(category.name).tag(category.id as Int?)
+                            }
+                        }
+                        .onChange(of: transactionView.categoryId) { newValue in
+                            if let categoryId = newValue,
+                               let selectedCategory = transactionView.categories.first(where: { $0.id == categoryId }) {
+                                transactionView.category = selectedCategory.name
+                            } else {
+                                transactionView.category = ""
+                            }
+                        }
+                    }
+                
                 Section {
                     Button(action: {
-                        transactionView.date = DateFormatter.allNumericUS.string(from: transactionDate)
-                        transactionView.createTransaction { success, errorMessage in
+                        transactionView.createdAt = DateFormatter.allNumericUS.string(from: transactionDate)
+                        transactionView.saveNewTransaction { success, errorMessage in
                             if success {
                                 alertType = .success
                             } else {

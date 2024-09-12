@@ -34,7 +34,9 @@ struct RecentTransactionList: View {
             
             // Mark: Recent Transaction List
             ForEach(Array(transactionListVM.transactions.prefix(5).enumerated()), id:\.element){index, transaction in
-                TransactionRow(transaction: transaction)
+                TransactionRow(transaction: transaction, onDoubleClick: {
+                    print("Transaction clicked in the recent transaction list")
+                })
                 
                 // Seperate each row clearly for better readibilty
                 Divider()

@@ -15,10 +15,34 @@ typealias TransactionPrefixSum = [(String, Double)] // a record of accumulated s
 
 final class TransactionListViewModel: ObservableObject {
     @Published var transactions: [Transaction] = []  // initialized empty object
+    @Published var searchText = ""
     @Published var isLoading = false
     
     private var ref: DatabaseReference = Database.database().reference()
     private var cancellables = Set<AnyCancellable>() // empty object
+    
+    var filteredTransactions: [Transaction] {
+            if searchText.isEmpty {
+                return transactions
+            } else {
+                return transactions.filter { transaction in
+                    // Check for matches in text fields
+                    let textMatches = transaction.merchant.lowercased().contains(searchText.lowercased()) ||
+                                      transaction.category.lowercased().contains(searchText.lowercased()) ||
+                                      transaction.institution.lowercased().contains(searchText.lowercased()) ||
+                                      transaction.account.lowercased().contains(searchText.lowercased()) ||
+                                      transaction.createdAt.contains(searchText)  // Direct string comparison for dates
+
+                    // Check for matches in numeric fields (amount)
+                    let amountString = String(format: "%.2f", transaction.amount)  // Convert to string with two decimal places
+                    let amountMatches = amountString.contains(searchText)
+
+                    return textMatches || amountMatches
+                }
+            }
+        }
+    
+    var currentTransaction: Transaction?
     
     // init method
     init(){
@@ -41,7 +65,7 @@ final class TransactionListViewModel: ObservableObject {
     
     private func observeTransactions() {
         print("Start getting data from DB")
-        ref.child("transactions").observe(.value) { [weak self] snapshot in
+        ref.child("transactions").observe(.value) { [weak self] (snapshot, _) in
             guard let self = self else { return }
             
             var newTransactions = [Transaction]()
@@ -50,11 +74,12 @@ final class TransactionListViewModel: ObservableObject {
                     continue
                 }
                 
-                let transactionId = value["id"] as? UUID ?? UUID() // Ensure we have a string ID
-
+                // Assuming ID is stored as a string in Firebase
+                let transactionId = UUID(uuidString: value["id"] as? String ?? "") ?? UUID()
+                
                 let transaction = Transaction(
-                    id: transactionId,
-                    date: value["date"] as? String ?? "",
+                    id: transactionId.uuidString,
+                    createdAt: value["date"] as? String ?? "",
                     institution: value["institution"] as? String ?? "",
                     account: value["account"] as? String ?? "",
                     merchant: value["merchant"] as? String ?? "",
@@ -72,11 +97,9 @@ final class TransactionListViewModel: ObservableObject {
             }
             
             // Sort transactions by date, most recent first
-            let sortedTransactions = newTransactions.sorted {
-                guard let date1 = DateFormatter.allNumericUS.date(from: $0.date),
-                      let date2 = DateFormatter.allNumericUS.date(from: $1.date) else {
-                    return false
-                }
+            let sortedTransactions = newTransactions.sorted { (trans1: Transaction, trans2: Transaction) -> Bool in
+                let date1 = DateFormatter.allNumericUS.date(from: trans1.createdAt) ?? Date.distantPast
+                let date2 = DateFormatter.allNumericUS.date(from: trans2.createdAt) ?? Date.distantPast
                 return date1 > date2
             }
             
@@ -84,7 +107,7 @@ final class TransactionListViewModel: ObservableObject {
                 self.transactions = sortedTransactions
                 print("Fetched and sorted \(self.transactions.count) transactions")
                 if let mostRecent = self.transactions.first {
-                    print("Most recent transaction: \(mostRecent.date), Merchant: \(mostRecent.merchant)")
+                    print("Most recent transaction: \(mostRecent.createdAt), Merchant: \(mostRecent.merchant)")
                 }
             }
         }
@@ -179,7 +202,7 @@ final class TransactionListViewModel: ObservableObject {
     func groupTransactionsByMonth() -> TransactionGroup {
         guard !transactions.isEmpty else { return [:] }
         
-        let groupedTransactions = TransactionGroup(grouping: transactions) { $0.month }
+        let groupedTransactions = TransactionGroup(grouping: filteredTransactions) { $0.month }
      
         return groupedTransactions
     }
@@ -210,5 +233,42 @@ final class TransactionListViewModel: ObservableObject {
         }
         
         return cumulativeSum
+    }
+    
+    private func fetchTransaction(withId id: UUID) {
+        print("Fetching transaction with ID: \(id)")
+        ref.child("transactions").queryOrdered(byChild: "id").queryEqual(toValue: id.uuidString).observeSingleEvent(of: .value) { [weak self] snapshot in
+            guard let self = self else { return }
+            guard let snapshot = snapshot.children.allObjects.first as? DataSnapshot,
+                  let value = snapshot.value as? [String: Any] else {
+                print("Transaction not found")
+                return
+            }
+
+            let transaction = self.createTransactionFromDictionary(value)
+            DispatchQueue.main.async {
+                self.currentTransaction = transaction
+                print("Fetched transaction: \(transaction)")
+            }
+        }
+    }
+    
+    private func createTransactionFromDictionary(_ value: [String: Any]) -> Transaction {
+        let transactionId = UUID(uuidString: value["id"] as? String ?? "") ?? UUID()
+        return Transaction(
+            id: transactionId.uuidString,
+            createdAt: value["date"] as? String ?? "",
+            institution: value["institution"] as? String ?? "",
+            account: value["account"] as? String ?? "",
+            merchant: value["merchant"] as? String ?? "",
+            amount: value["amount"] as? Double ?? 0.0,
+            type: value["type"] as? String ?? "",
+            categoryId: value["categoryId"] as? Int ?? 0,
+            category: value["category"] as? String ?? "",
+            isPending: value["isPending"] as? Bool ?? false,
+            isTransfer: value["isTransfer"] as? Bool ?? false,
+            isExpense: value["isExpense"] as? Bool ?? false,
+            isEdited: value["isEdited"] as? Bool ?? false
+        )
     }
 }

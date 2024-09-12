@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1086B59A2C91BA37008E324F /* EditTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1086B5992C91BA37008E324F /* EditTransactionView.swift */; };
+		1086B59E2C920D10008E324F /* CategoryGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1086B59D2C920D10008E324F /* CategoryGridView.swift */; };
 		10D12E732C6CCF7B00D2AAD6 /* ExpenseTrackerDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D12E722C6CCF7B00D2AAD6 /* ExpenseTrackerDemoApp.swift */; };
 		10D12E752C6CCF7B00D2AAD6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D12E742C6CCF7B00D2AAD6 /* ContentView.swift */; };
 		10D12E772C6CCF7C00D2AAD6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10D12E762C6CCF7C00D2AAD6 /* Assets.xcassets */; };
@@ -29,6 +31,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1086B5992C91BA37008E324F /* EditTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTransactionView.swift; sourceTree = "<group>"; };
+		1086B59D2C920D10008E324F /* CategoryGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryGridView.swift; sourceTree = "<group>"; };
 		10D12E6F2C6CCF7B00D2AAD6 /* ExpenseTrackerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExpenseTrackerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10D12E722C6CCF7B00D2AAD6 /* ExpenseTrackerDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseTrackerDemoApp.swift; sourceTree = "<group>"; };
 		10D12E742C6CCF7B00D2AAD6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -97,6 +101,8 @@
 				10D12EB22C84CFB600D2AAD6 /* GoogleService-Info.plist */,
 				10D12EB52C86151200D2AAD6 /* TransactionEntryViewModel.swift */,
 				10D12EB72C86176300D2AAD6 /* NewTransactionView.swift */,
+				1086B5992C91BA37008E324F /* EditTransactionView.swift */,
+				1086B59D2C920D10008E324F /* CategoryGridView.swift */,
 			);
 			path = ExpenseTrackerDemo;
 			sourceTree = "<group>";
@@ -201,10 +207,12 @@
 				10D12E752C6CCF7B00D2AAD6 /* ContentView.swift in Sources */,
 				10D12EB82C86176300D2AAD6 /* NewTransactionView.swift in Sources */,
 				10D12E8F2C6CDB3800D2AAD6 /* TransactionRow.swift in Sources */,
+				1086B59E2C920D10008E324F /* CategoryGridView.swift in Sources */,
 				10D12EB62C86151200D2AAD6 /* TransactionEntryViewModel.swift in Sources */,
 				10D12E732C6CCF7B00D2AAD6 /* ExpenseTrackerDemoApp.swift in Sources */,
 				10D12E942C6CEC7800D2AAD6 /* TransactionListViewModel.swift in Sources */,
 				10D12E852C6CD05100D2AAD6 /* Extensions.swift in Sources */,
+				1086B59A2C91BA37008E324F /* EditTransactionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
