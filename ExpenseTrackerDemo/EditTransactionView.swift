@@ -83,7 +83,7 @@ struct EditTransactionView: View {
                     
                 }
                 
-                Section(header: Text("Category")) {
+                Section(header: Text("Type & Category")) {
                     Picker("Type", selection: $transactionView.type) {
                         Text("Select a type").tag(Int?.none)
                         ForEach(TransactionType.allCases, id: \.self) { type in
