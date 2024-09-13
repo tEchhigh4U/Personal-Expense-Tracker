@@ -12,6 +12,8 @@ struct TransactionRow: View {
     var transaction: Transaction
     var onDoubleClick: () -> Void  // Action to perform on double click
     
+    @State private var textIsExpanded = false
+    
     var body: some View {
         HStack(spacing: 20){
             // Mark: Transaction Category Icon
@@ -27,7 +29,13 @@ struct TransactionRow: View {
                 Text(transaction.merchant)
                     .font(.subheadline)
                     .bold()
-                    .lineLimit(1)
+                    .lineLimit(textIsExpanded ? nil : 1)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .onTapGesture {
+                        withAnimation {
+                            self.textIsExpanded.toggle()
+                        }
+                    }
                 
                 // Mark: Transaction Category
                 Text(transaction.category)
