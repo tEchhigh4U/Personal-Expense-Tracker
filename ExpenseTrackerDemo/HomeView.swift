@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  HomeView.swift
 //  ExpenseTrackerDemo
 //
 //  Created by William Hui on 14/8/2024.
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftUICharts
 
 struct HomeView: View {
-    @EnvironmentObject var transactionListVM: TransactionListViewModel // Type
+    @EnvironmentObject var transactionListVM: TransactionListViewModel
     
     //    var demoData: [Double] = [8, 2, 4, 6, 19, 22]
     @State private var isShowingNewRecordView = false
@@ -27,7 +27,7 @@ struct HomeView: View {
                             .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5)
                         
                         Text("Expense Overview  - \(todayString.dateParsed().formatted())")
-                            .font(.title2) // Slightly smaller than title but larger than title3
+                            .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(Color.secondary)
                             .cornerRadius(10)

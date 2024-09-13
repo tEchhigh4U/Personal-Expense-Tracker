@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TransactionList: View {
     @EnvironmentObject var transactionListVM: TransactionListViewModel
-    @FocusState private var isTextFieldFocused: Bool
     
     @State private var searchText = ""
     @State private var activeTransaction: Transaction?
@@ -19,17 +18,7 @@ struct TransactionList: View {
         NavigationView {
                     VStack {
                         // MARK: Search bar
-                        TextField("Search transactions...", text: $transactionListVM.searchText)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding(.horizontal, 10)
-                            .padding(.top, 12)
-                            .focused($isTextFieldFocused) // Bind the focus state to the text field
-                            .onAppear {
-                                // Optionally set the focus when the view appears
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                    self.isTextFieldFocused = true
-                                }
-                            }
+                        SearchBar(searchText: $transactionListVM.searchText)
                         
                         Spacer()
                         
