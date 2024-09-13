@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftUICharts
 
-struct ContentView: View {
+struct HomeView: View {
     @EnvironmentObject var transactionListVM: TransactionListViewModel // Type
     
     //    var demoData: [Double] = [8, 2, 4, 6, 19, 22]
@@ -99,7 +99,7 @@ struct ContentView: View {
     }
 }
     
-struct ContentView_Previews: PreviewProvider {
+struct HomeView_Previews: PreviewProvider {
     static let transactionListVM: TransactionListViewModel = {
         let transactioinListVM  = TransactionListViewModel()
         transactioinListVM.transactions = transactionListPreviewData
@@ -108,8 +108,8 @@ struct ContentView_Previews: PreviewProvider {
         
     static var previews: some View {
         Group{
-            ContentView()
-            ContentView()
+            HomeView()
+            HomeView()
                 .preferredColorScheme(.dark)
         }
         .environmentObject(transactionListVM)

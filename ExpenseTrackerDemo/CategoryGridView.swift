@@ -21,22 +21,22 @@ struct CategoryGridView: View {
                 ForEach(categories, id: \.id) { category in
                     VStack {
                         // FontIcon with consistent sizing and alignment
-                        FontIcon.text(.awesome5Solid(code: category.icon), fontsize: 22, color: .customIcon)
-                            .frame(width: 60, height: 60)  // Fixed frame size for uniformity
-                            .padding(.bottom, 3)  // Consistent padding below the icon
+                        FontIcon.text(.awesome5Solid(code: category.icon), fontsize: 28, color: .customIcon)
+                            .frame(width: 60, height: 60)
+                            .padding(.bottom, 5)
 
                         // Text with controlled font size and alignment
                         Text(category.name)
-                            .font(.system(size: category.name.count > 9 ? 11 : 12)) // Smaller font for longer names
+                            .font(.system(size: category.name.count > 9 ? 12 : 14)) // Smaller font for longer names
                             .multilineTextAlignment(.center)
                             .lineLimit(2)
                     }
                     .padding()
-                    .frame(width: 100, height: 140) // Explicit width and height for each grid item
+                    .frame(width: 115, height: 140)
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(10)
                     .onTapGesture {
-                        print("Category selected with ID: \(category.id)")
+                        // print("Category selected with ID: \(category.id)")
                         self.selectedCategoryId = category.id
                         self.presentationMode.wrappedValue.dismiss()
                     }
@@ -49,6 +49,10 @@ struct CategoryGridView: View {
 
 struct CategoryGridView_Previews: PreviewProvider {
     static var previews: some View {
-        CategoryGridView(selectedCategoryId: .constant(1))
+        Group{
+            CategoryGridView(selectedCategoryId: .constant(1))
+            CategoryGridView(selectedCategoryId: .constant(1))
+                .preferredColorScheme(.dark)
+        }
     }
 }

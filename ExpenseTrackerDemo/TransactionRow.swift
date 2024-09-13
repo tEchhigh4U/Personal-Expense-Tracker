@@ -47,7 +47,6 @@ struct TransactionRow: View {
                 Text(transaction.dateParsed, format: .dateTime.year().month().day())
                     .font(.footnote)
                     .foregroundStyle(.secondary)
-                
             }
             Spacer()
             
