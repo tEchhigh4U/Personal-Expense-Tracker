@@ -28,6 +28,8 @@ struct NewTransactionView: View {
     @State private var showDatePicker = false
     @State private var alertType: AlertType?
     
+    @Environment(\.presentationMode) var presentationMode
+    
     var formIsValid: Bool {
         !transactionView.institution.isEmpty &&
         !transactionView.account.isEmpty &&
@@ -118,6 +120,8 @@ struct NewTransactionView: View {
                         transactionView.saveNewTransaction { success, errorMessage in
                             if success {
                                 alertType = .success
+                                // MARK: Dismiss the view here
+                                presentationMode.wrappedValue.dismiss()
                             } else {
                                 alertType = .error(errorMessage ?? "An unknown error occurred.")
                             }
