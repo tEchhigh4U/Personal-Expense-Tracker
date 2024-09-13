@@ -30,7 +30,7 @@ struct ContentView: View {
                             .font(.title2) // Slightly smaller than title but larger than title3
                             .fontWeight(.bold)
                             .foregroundColor(Color.secondary)
-                            .cornerRadius(10)              
+                            .cornerRadius(10)
                         
                         // MARK: Expense Chart
                         let data = transactionListVM.accumulateTransactions()
@@ -72,8 +72,8 @@ struct ContentView: View {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     Button(action: {
                         transactionListVM.refreshTransactions()
-                }) {
-                    Image(systemName: "arrow.clockwise")
+                    }) {
+                        Image(systemName: "arrow.clockwise")
                     }
                 }
                 
@@ -97,22 +97,23 @@ struct ContentView: View {
         .navigationViewStyle(.stack)
         .accentColor(.primary)
     }
+}
     
-    struct ContentView_Previews: PreviewProvider {
-        static let transactionListVM: TransactionListViewModel = {
-            let transactioinListVM  = TransactionListViewModel()
-            transactioinListVM.transactions = transactionListPreviewData
-            return transactioinListVM
-        }()
+struct ContentView_Previews: PreviewProvider {
+    static let transactionListVM: TransactionListViewModel = {
+        let transactioinListVM  = TransactionListViewModel()
+        transactioinListVM.transactions = transactionListPreviewData
+        return transactioinListVM
+    }()
         
-        static var previews: some View {
-            Group{
-                ContentView()
-                ContentView()
-                    .preferredColorScheme(.dark)
-            }
-            .environmentObject(transactionListVM)
-            
+    static var previews: some View {
+        Group{
+            ContentView()
+            ContentView()
+                .preferredColorScheme(.dark)
         }
+        .environmentObject(transactionListVM)
+            
     }
 }
+
