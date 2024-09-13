@@ -14,7 +14,7 @@ struct EditTransactionView: View {
     @State private var alertType: AlertType?
     @State private var amount: Double
     @State private var selectedDate: Date
-    @State private var selectedCategoryId: Int
+    @State private var selectedCategoryId: Int? = nil
     @State private var showingCategoryGrid = false
     @State private var showingDeleteConfirmation = false
     @State private var showDatePicker = false
@@ -184,6 +184,11 @@ struct EditTransactionView: View {
 
 struct EditTransactionView_Previews: PreviewProvider {
     static var previews: some View {
-        EditTransactionView(transactionView: TransactionEntryViewModel())
+        Group{
+            EditTransactionView(transactionView: TransactionEntryViewModel())
+            EditTransactionView(transactionView: TransactionEntryViewModel())
+                .preferredColorScheme(.dark)
+        }
+        
     }
 }

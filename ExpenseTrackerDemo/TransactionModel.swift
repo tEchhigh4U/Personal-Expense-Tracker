@@ -79,7 +79,9 @@ extension Category{
     // Auto & Transport
     static let publicTransportation = Category(id: 101, name: "Public Transportation", icon: .bus, mainCategoryId: 1)
     static let taxi = Category(id: 102, name: "Taxi", icon: .taxi, mainCategoryId: 1)
-    static let uber = Category(id: 103, name: "Uber", icon: .uber, mainCategoryId: 1)
+    static let motorcycle = Category(id: 103, name: "Motorcycle", icon: .motorcycle, mainCategoryId: 1)
+    static let parking = Category(id: 104, name: "Parking", icon: .parking, mainCategoryId: 1)
+    static let oilStation = Category(id: 105, name: "Oil Statioin", icon: .oil_can, mainCategoryId: 1)
 
     // Bills & Utilities
     static let mobilePhone = Category(id: 201, name: "Mobile Phone", icon: .mobile_alt, mainCategoryId: 2)
@@ -94,6 +96,7 @@ extension Category{
     // Food & Dining
     static let groceries = Category(id: 501, name: "Groceries", icon: .shopping_basket, mainCategoryId: 5)
     static let restaurants = Category(id: 502, name: "Restaurants", icon: .utensils, mainCategoryId: 5)
+    static let coffee = Category(id: 503, name: "Coffee", icon: .coffee, mainCategoryId: 5)
 
     // Home
     static let rent = Category(id: 601, name: "Rent", icon: .house_user, mainCategoryId: 6)
@@ -115,6 +118,7 @@ extension Category{
     // Education
     static let tuition = Category(id: 1101, name: "Tuition", icon: .university, mainCategoryId: 11)
     static let books = Category(id: 1102, name: "Books", icon: .book, mainCategoryId: 11)
+    static let subscription = Category(id: 1103, name: "Subscription", icon: .handshake, mainCategoryId: 11)
 
     // Travel
     static let airTravel = Category(id: 1201, name: "Air Travel", icon: .plane_departure, mainCategoryId: 12)
@@ -160,7 +164,9 @@ extension Category {
     static let subCategories: [Category] = [
         .publicTransportation,
         .taxi,
-        .uber,
+        .motorcycle,
+        .parking,
+        .oilStation,
         .mobilePhone,
         .moviesAndDVDs,
         .bankFee,
@@ -176,6 +182,7 @@ extension Category {
         .pharmacy,
         .tuition,
         .books,
+        .subscription,
         .airTravel,
         .hotel,
         .charitableDonations,

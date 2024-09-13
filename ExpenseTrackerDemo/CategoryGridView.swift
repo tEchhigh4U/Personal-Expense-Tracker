@@ -10,7 +10,7 @@ import SwiftUIFontIcon
 
 struct CategoryGridView: View {
     @Environment(\.presentationMode) var presentationMode
-    @Binding var selectedCategoryId: Int
+    @Binding var selectedCategoryId: Int?
     
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 3)
     var categories: [Category] = Category.all
@@ -21,27 +21,22 @@ struct CategoryGridView: View {
                 ForEach(categories, id: \.id) { category in
                     VStack {
                         // FontIcon with consistent sizing and alignment
-                        FontIcon.text(.awesome5Solid(code: category.icon), fontsize: 22, color: .blue)
-                            .frame(width: 50, height: 50)  // Fixed frame size for uniformity
-//                            .background(GeometryReader { geometry in
-//                                Color.clear  // Using GeometryReader to ensure precise layout
-//                                    .onAppear {
-//                                        print("Icon width: \(geometry.size.width), height: \(geometry.size.height)")
-//                                    }
-//                            })
-                            .padding(.bottom, 5)  // Consistent padding below the icon
+                        FontIcon.text(.awesome5Solid(code: category.icon), fontsize: 22, color: .customIcon)
+                            .frame(width: 60, height: 60)  // Fixed frame size for uniformity
+                            .padding(.bottom, 3)  // Consistent padding below the icon
 
                         // Text with controlled font size and alignment
                         Text(category.name)
-                            .font(.system(size: 12))
-                            .multilineTextAlignment(.center)  // Center-align text for better aesthetics
-                            .lineLimit(2)                     // Limiting text to two lines to avoid overflow
+                            .font(.system(size: category.name.count > 9 ? 11 : 12)) // Smaller font for longer names
+                            .multilineTextAlignment(.center)
+                            .lineLimit(2)
                     }
                     .padding()
-                    .frame(width: 100, height: 120) // Explicit width and height for each grid item
+                    .frame(width: 100, height: 140) // Explicit width and height for each grid item
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(10)
                     .onTapGesture {
+                        print("Category selected with ID: \(category.id)")
                         self.selectedCategoryId = category.id
                         self.presentationMode.wrappedValue.dismiss()
                     }

@@ -112,6 +112,7 @@ class TransactionEntryViewModel: ObservableObject {
     }
     
     func saveNewTransaction(completion: @escaping (Bool, String?) -> Void) {
+        print("Received amount: \(amount), category ID: \(String(describing: categoryId))")  // Verify what is received exactly
         guard let parsedAmount = Double(amount), let categoryId = categoryId else {
             completion(false, "Invalid amount or missing category ID.")
             return

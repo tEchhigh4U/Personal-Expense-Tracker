@@ -20,9 +20,17 @@ struct ContentView: View {
                 ScrollView{
                     VStack(alignment: .leading, spacing: 24) {
                         //MARK: Title
-                        Text("Overview - \(todayString.dateParsed().formatted())" )
-                            .font(.title2)
-                            .bold()
+                        Text("Welcome Back 👋")
+                            .font(.largeTitle) // Larger text
+                            .fontWeight(.heavy)
+                            .foregroundColor(Color.primary)
+                            .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5)
+                        
+                        Text("Expense Overview  - \(todayString.dateParsed().formatted())")
+                            .font(.title2) // Slightly smaller than title but larger than title3
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.secondary)
+                            .cornerRadius(10)              
                         
                         // MARK: Expense Chart
                         let data = transactionListVM.accumulateTransactions()
@@ -83,7 +91,7 @@ struct ContentView: View {
                 }
             }
             .navigationDestination(isPresented: $isShowingNewRecordView) {
-                NewTransactionView()
+                NewTransactionView(transactionView: TransactionEntryViewModel())
             }
         }
         .navigationViewStyle(.stack)
