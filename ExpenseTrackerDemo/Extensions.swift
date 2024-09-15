@@ -17,12 +17,9 @@ extension Color {
 
 extension DateFormatter{
     static let allNumericUS: DateFormatter = {
-        print("Initializing DateFormatter")
         let formatter = DateFormatter()
         formatter.dateFormat = "MM/dd/yyyy"
-//        formatter.locale = Locale(identifier: "en_HK")
-//        formatter.timeZone = TimeZone(identifier: "Asia/Hong_Kong")
-        
+        formatter.locale = Locale(identifier: "en_US")
         return formatter
     }()
 }
@@ -44,7 +41,6 @@ let todayString = Date().formatted()
 extension String {
     func dateParsed() -> Date {
         guard let parsedDate = DateFormatter.allNumericUS.date(from: self) else { return Date()}
-        
         return parsedDate
     }
 }
