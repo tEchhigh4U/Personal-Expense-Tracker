@@ -22,22 +22,26 @@ struct TransactionList: View {
                         
                         Spacer()
                         
-                        List {
-                            // MARK: Transaction list
-                            ForEach(Array(transactionListVM.groupTransactionsByMonth()), id: \.key) { month, transactions in
-                                Section {
-                                    ForEach(transactions) { transaction in
-                                        TransactionRow(transaction: transaction) {
-                                            self.activeTransaction = transaction
-                                            self.isNavigationActive = true
+                        if transactionListVM.groupTransactionsByMonth().isEmpty {
+                            EmptyStateView()
+                        } else {
+                            List {
+                                // MARK: Transaction list
+                                ForEach(Array(transactionListVM.groupTransactionsByMonth()), id: \.key) { month, transactions in
+                                    Section {
+                                        ForEach(transactions) { transaction in
+                                            TransactionRow(transaction: transaction) {
+                                                self.activeTransaction = transaction
+                                                self.isNavigationActive = true
+                                            }
                                         }
+                                    } header: {
+                                        Text(month)
                                     }
-                                } header: {
-                                    Text(month)
                                 }
                             }
+                            .listStyle(.plain)
                         }
-                        .listStyle(.plain)
                     }
                     .background(
                         NavigationLink(destination: activeTransaction.map { EditTransactionView(transactionView: TransactionEntryViewModel(transaction: $0)) }, isActive: $isNavigationActive) {
