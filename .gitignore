@@ -81,3 +81,5 @@ htmlcov
 
 # Ignore Firebase service file
 .GoogleService-Info.plist
+
+*.xcuserstate
