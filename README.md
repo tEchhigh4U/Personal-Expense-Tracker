@@ -6,7 +6,7 @@ user-friendliness in mind, our tracker helps you keep an eye on your finances wi
 - **Easy Input**: Quickly add new expenses with just a few clicks.
 - **Categorization**: Organize your expenses into categories like Food, Transport, Housing, and more for better insights.
 - **Visual Analytics**: View graphs and charts that reflect your spending patterns over time.
-- **Export Options**: Export your data in CSV or PDF format for easy sharing or personal backup.
+- **Export Options**: Export your data in CSV or PDF format for personal backup.
 
 ## Why Use the Personal Expense Tracker?
 
@@ -17,14 +17,19 @@ consider using this tool:
 - **Gain Insights**: Understand where your money goes and identify areas where you can cut back.
 - **Financial Goals**: Stay on track with your financial goals by monitoring your spending against budgets.
 
-## Packages
-1. Firebase Database
-2. SwiftUICharts
-3. SwiftUIFontIcon
+## Technologies Used
+- SwiftUI
+- Firebase Database
+- SwiftUICharts
+- SwiftUIFontIcon
+
+## Get Started
+To get started with the SwiftUI Expense Tracker project, simply clone the repository and open it in Xcode. From there, you can get all the reuqird packages, build and run the app on your iOS device or simulator.
 
 ## Feedback
 
 Your feedback is invaluable to us. If you have any suggestions or encounter any issues, please let us know via [Contact Us](mailto: williamhkw852@gmail.com). We are committed to improving and making your expense tracking experience as smooth as possible.
 
-## Ref
-1. url: https://designcode.io/data/transactions.json
+## Reference
+1. testing data : https://designcode.io/data/transactions.json
+2. 
