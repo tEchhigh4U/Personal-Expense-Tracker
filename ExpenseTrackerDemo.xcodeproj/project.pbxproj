@@ -71,6 +71,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1086B5A72C970844008E324F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				10D12E8E2C6CDB3800D2AAD6 /* TransactionRow.swift */,
+				10D12E952C6E325300D2AAD6 /* RecentTransactionList.swift */,
+				10D12E972C74C8EE00D2AAD6 /* TransactionList.swift */,
+				10D12EB72C86176300D2AAD6 /* NewTransactionView.swift */,
+				1086B5992C91BA37008E324F /* EditTransactionView.swift */,
+				1086B59D2C920D10008E324F /* CategoryGridView.swift */,
+				1086B5A32C96F1E0008E324F /* EmptyStateView.swift */,
+				1086B5A12C94A27A008E324F /* SearchBar.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1086B5A82C97096D008E324F /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				10D12EB52C86151200D2AAD6 /* TransactionEntryViewModel.swift */,
+				10D12E932C6CEC7800D2AAD6 /* TransactionListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		1086B5A92C970990008E324F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				10D12E822C6CD02800D2AAD6 /* TransactionModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		10D12E662C6CCF7B00D2AAD6 = {
 			isa = PBXGroup;
 			children = (
@@ -92,23 +124,15 @@
 		10D12E712C6CCF7B00D2AAD6 /* ExpenseTrackerDemo */ = {
 			isa = PBXGroup;
 			children = (
+				1086B5A92C970990008E324F /* Model */,
+				1086B5A82C97096D008E324F /* ViewModel */,
+				1086B5A72C970844008E324F /* View */,
 				10D12E722C6CCF7B00D2AAD6 /* ExpenseTrackerDemoApp.swift */,
 				10D12E742C6CCF7B00D2AAD6 /* HomeView.swift */,
-				10D12E822C6CD02800D2AAD6 /* TransactionModel.swift */,
 				10D12E842C6CD05100D2AAD6 /* Extensions.swift */,
-				10D12E8E2C6CDB3800D2AAD6 /* TransactionRow.swift */,
-				10D12E932C6CEC7800D2AAD6 /* TransactionListViewModel.swift */,
 				10D12E762C6CCF7C00D2AAD6 /* Assets.xcassets */,
-				10D12E952C6E325300D2AAD6 /* RecentTransactionList.swift */,
 				10D12E782C6CCF7C00D2AAD6 /* Preview Content */,
-				10D12E972C74C8EE00D2AAD6 /* TransactionList.swift */,
 				10D12EB22C84CFB600D2AAD6 /* GoogleService-Info.plist */,
-				10D12EB52C86151200D2AAD6 /* TransactionEntryViewModel.swift */,
-				10D12EB72C86176300D2AAD6 /* NewTransactionView.swift */,
-				1086B5992C91BA37008E324F /* EditTransactionView.swift */,
-				1086B59D2C920D10008E324F /* CategoryGridView.swift */,
-				1086B5A12C94A27A008E324F /* SearchBar.swift */,
-				1086B5A32C96F1E0008E324F /* EmptyStateView.swift */,
 			);
 			path = ExpenseTrackerDemo;
 			sourceTree = "<group>";

@@ -32,4 +32,5 @@ Your feedback is invaluable to us. If you have any suggestions or encounter any 
 
 ## Reference
 1. testing data : https://designcode.io/data/transactions.json
-2. 
+2. Expensify - Expense Tracker: https://apps.apple.com/sg/app/expensify-expense-tracker/id471713959
+3. [iOS] Project: Expense Tracker. Part 2. Google Firebase: https://medium.com/%E5%BD%BC%E5%BE%97%E6%BD%98%E7%9A%84-swift-ios-app-%E9%96%8B%E7%99%BC%E6%95%99%E5%AE%A4/ios-project-expense-tracker-part-2-google-firebase-3513552b5ce9
