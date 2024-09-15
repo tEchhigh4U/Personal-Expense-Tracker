@@ -18,6 +18,7 @@ struct EditTransactionView: View {
     @State private var showingCategoryGrid = false
     @State private var showingDeleteConfirmation = false
     @State private var showDatePicker = false
+    @State private var showingSaveConfirmation = false
     
     init(transactionView: TransactionEntryViewModel) {
         self.transactionView = transactionView
@@ -47,27 +48,70 @@ struct EditTransactionView: View {
                         DatePicker(
                             "Select Date",
                             selection: $selectedDate,
+                            in: ...Date(),
                             displayedComponents: .date
                         )
-                        .datePickerStyle(.wheel)
+                        .datePickerStyle(.graphical)
                     }
                     
                     HStack {
                         Image(systemName: "building.2")
                             .foregroundColor(.gray)
                         TextField("Institution or Bank", text: $transactionView.institution)
+                            .overlay(
+                                HStack {
+                                    Spacer()
+                                    if !transactionView.institution.isEmpty {
+                                        Button(action: {
+                                            transactionView.institution = ""
+                                        }) {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundColor(.gray)
+                                        }
+                                        .padding(.trailing, 2)
+                                    }
+                                }
+                            )
                     }
                     
                     HStack {
                         Image(systemName: "creditcard")
                             .foregroundColor(.gray)
-                        TextField("Account name or number", text: $transactionView.account)
+                        TextField("Account Name or Number", text: $transactionView.account)
+                            .overlay(
+                                HStack {
+                                    Spacer()
+                                    if !transactionView.account.isEmpty {
+                                        Button(action: {
+                                            transactionView.account = ""
+                                        }) {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundColor(.gray)
+                                        }
+                                        .padding(.trailing, 2)
+                                    }
+                                }
+                            )
                     }
                     
                     HStack {
                         Image(systemName: "cart")
                             .foregroundColor(.gray)
                         TextField("Merchant", text: $transactionView.merchant)
+                            .overlay(
+                                HStack {
+                                    Spacer()
+                                    if !transactionView.merchant.isEmpty {
+                                        Button(action: {
+                                            transactionView.merchant = ""
+                                        }) {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundColor(.gray)
+                                        }
+                                        .padding(.trailing, 2)
+                                    }
+                                }
+                            )
                     }
                     
                     HStack {
@@ -75,14 +119,26 @@ struct EditTransactionView: View {
                             .foregroundColor(.gray)
                         TextField("Amount (HKD)", value: $amount, formatter: NumberFormatter.currency)
                             .keyboardType(.decimalPad)
-                            .onChange(of: amount) { newValue in
+                            .overlay(
+                                HStack {
+                                    Spacer()
+                                    if amount != 0 {
+                                        Button(action: {
+                                            amount = 0.0
+                                        }) {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundColor(.gray)
+                                        }
+                                        .padding(.trailing, 2)
+                                    }
+                                }
+                            )
+                            .onChange(of: amount) { oldValue, newValue in
                                 let formattedAmount = String(format: "%.2f", newValue)
                                 transactionView.amount = formattedAmount
-                                if let saveAmount = Double(formattedAmount) {
-                                    amount = saveAmount
-                                    print("Saved Amount to database: \($transactionView.amount)")
+                                print("Formatted Amount: \(formattedAmount)")
+                                print("Updated amount in transactionView: \(transactionView.amount)")
                             }
-                        }
                     }
                 }
                 
@@ -111,14 +167,7 @@ struct EditTransactionView: View {
                 
                 Section {
                     Button(action: {
-                        transactionView.createdAt = DateFormatter.allNumericUS.string(from: selectedDate)
-                        transactionView.saveTransaction { success, errorMessage in
-                            if success {
-                                alertType = .success
-                            } else {
-                                alertType = .error(errorMessage ?? "An unknown error occurred.")
-                            }
-                        }
+                        showingSaveConfirmation = true
                     }) {
                         HStack {
                             Image(systemName: "arrow.clockwise.circle.fill")
@@ -129,34 +178,46 @@ struct EditTransactionView: View {
                     }
                 }
             }
-            }
             .navigationTitle("Edit Transaction")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                Button(action: {
-                                    showingDeleteConfirmation = true
-                                }) {
-                                    Image(systemName: "trash")
-                                        .imageScale(.medium)
-                                        .font(.system(size: 20))
-                                        .foregroundColor(.red)
-                                }
-                            }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showingDeleteConfirmation = true
+                    }) {
+                        Image(systemName: "trash")
+                            .imageScale(.medium)
+                            .font(.system(size: 20))
+                            .foregroundColor(.red)
+                    }
+                }
+            }
+            .confirmationDialog("Are you sure you want to update this transaction?", isPresented: $showingSaveConfirmation, titleVisibility: .visible) {
+                Button("Update", role: .destructive) {
+                    transactionView.createdAt = DateFormatter.allNumericUS.string(from: selectedDate)
+                    transactionView.saveTransaction { success, errorMessage in
+                        if success {
+                            alertType = .success
+                        } else {
+                            alertType = .error(errorMessage ?? "An unknown error occurred.")
                         }
-                        .confirmationDialog("Are you sure you want to delete this transaction?", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
-                            Button("Delete", role: .destructive) {
-                                transactionView.deleteTransaction { success, errorMessage in
-                                    if success {
-                                        alertType = .success
-                                        presentationMode.wrappedValue.dismiss()
-                                    } else {
-                                        alertType = .error(errorMessage ?? "An unknown error occurred.")
-                                    }
-                                }
-                            }
-                            Button("Cancel", role: .cancel) {}
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            }
+            .confirmationDialog("Are you sure you want to delete this transaction?", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
+                Button("Delete", role: .destructive) {
+                    transactionView.deleteTransaction { success, errorMessage in
+                        if success {
+                            alertType = .success
+                            presentationMode.wrappedValue.dismiss()
+                        } else {
+                            alertType = .error(errorMessage ?? "An unknown error occurred.")
                         }
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            }
             .onAppear {
                 print("Transaction ID: \(transactionView.transactionId ?? "nil")")
                 guard let transactionIdString = transactionView.transactionId else {
@@ -184,6 +245,7 @@ struct EditTransactionView: View {
             }
         }
     }
+}
 
 struct EditTransactionView_Previews: PreviewProvider {
     static var previews: some View {

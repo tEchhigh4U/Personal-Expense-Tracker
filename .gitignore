@@ -79,5 +79,12 @@ htmlcov
 .coverage
 /benchmark/scripts/Benchmark_Driverc
 
+#==============================================================================#
 # Ignore Firebase service file
-**/GoogleService-Info.plist
+#==============================================================================#
+.GoogleService-Info.plist
+
+#==============================================================================#
+# Ignore UserInterfaceState.xcuserstate files or related files
+#==============================================================================#
+*.xcuserstate

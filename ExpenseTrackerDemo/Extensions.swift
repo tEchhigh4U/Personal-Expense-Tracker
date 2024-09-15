@@ -33,6 +33,7 @@ extension NumberFormatter {
         formatter.numberStyle = .currency
         formatter.currencyCode = "HKD"
         formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
         return formatter
     }
 }

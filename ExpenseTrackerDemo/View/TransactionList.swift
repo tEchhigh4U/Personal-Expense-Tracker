@@ -45,9 +45,9 @@ struct TransactionList: View {
                     }
                     .background(
                         NavigationLink(destination: activeTransaction.map { EditTransactionView(transactionView: TransactionEntryViewModel(transaction: $0)) }, isActive: $isNavigationActive) {
-                                            EmptyView()
-                                        }
-                                        .hidden()
+                            EmptyView()
+                        }
+                        .hidden()
                     )
                     .navigationTitle("Transactions")
                     .navigationBarTitleDisplayMode(.inline)
