@@ -58,6 +58,7 @@ struct NewTransactionView: View {
         NavigationView {
             Form {
                 Section(header: Text("Transaction Details")){
+                    // MAKR: Transaction Date
                     Button(action: {
                         withAnimation {
                             self.showDatePicker.toggle()
@@ -96,7 +97,7 @@ struct NewTransactionView: View {
                                             Image(systemName: "xmark.circle.fill")
                                                 .foregroundColor(.gray)
                                         }
-                                        .padding(.trailing, 8) // Adds some padding to the right side
+                                        .padding(.trailing, 2)
                                     }
                                 }
                             )
@@ -117,7 +118,7 @@ struct NewTransactionView: View {
                                             Image(systemName: "xmark.circle.fill")
                                                 .foregroundColor(.gray)
                                         }
-                                        .padding(.trailing, 8)
+                                        .padding(.trailing, 2)
                                     }
                                 }
                             )
@@ -138,7 +139,7 @@ struct NewTransactionView: View {
                                             Image(systemName: "xmark.circle.fill")
                                                 .foregroundColor(.gray)
                                         }
-                                        .padding(.trailing, 8)
+                                        .padding(.trailing, 2)
                                     }
                                 }
                             )
@@ -160,7 +161,7 @@ struct NewTransactionView: View {
                                             Image(systemName: "xmark.circle.fill")
                                                 .foregroundColor(.gray)
                                         }
-                                        .padding(.trailing, 8)
+                                        .padding(.trailing, 2)
                                     }
                                 }
                             )

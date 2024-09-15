@@ -47,43 +47,102 @@ struct EditTransactionView: View {
                         DatePicker(
                             "Select Date",
                             selection: $selectedDate,
+                            in: ...Date(), // Range from the past up to the current date
                             displayedComponents: .date
                         )
-                        .datePickerStyle(.wheel)
+                        .datePickerStyle(.graphical)
                     }
                     
+                    // MARK: Transaction Institution
                     HStack {
                         Image(systemName: "building.2")
                             .foregroundColor(.gray)
                         TextField("Institution or Bank", text: $transactionView.institution)
+                            .overlay(
+                                HStack {
+                                    Spacer() // Pushes the button to the right
+                                    if !transactionView.institution.isEmpty {
+                                        Button(action: {
+                                            transactionView.institution = "" // Clears the text field
+                                        }) {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundColor(.gray)
+                                        }
+                                        .padding(.trailing, 2)
+                                    }
+                                }
+                            )
                     }
                     
+                    // MARK: Transaction Account
                     HStack {
                         Image(systemName: "creditcard")
                             .foregroundColor(.gray)
-                        TextField("Account name or number", text: $transactionView.account)
+                        TextField("Account Name or Number", text: $transactionView.account)
+                            .overlay(
+                                HStack {
+                                    Spacer() // Pushes the button to the right
+                                    if !transactionView.account.isEmpty {
+                                        Button(action: {
+                                            transactionView.account = "" // Clears the text field
+                                        }) {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundColor(.gray)
+                                        }
+                                        .padding(.trailing, 2)
+                                    }
+                                }
+                            )
                     }
                     
+                    // MARK: Transaction Merchant
                     HStack {
                         Image(systemName: "cart")
                             .foregroundColor(.gray)
                         TextField("Merchant", text: $transactionView.merchant)
+                            .overlay(
+                                HStack {
+                                    Spacer() // Pushes the button to the right
+                                    if !transactionView.merchant.isEmpty {
+                                        Button(action: {
+                                            transactionView.merchant = "" // Clears the text field
+                                        }) {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundColor(.gray)
+                                        }
+                                        .padding(.trailing, 2)
+                                    }
+                                }
+                            )
                     }
                     
+                    // MARK: Transaction Amount
                     HStack {
                         Image(systemName: "dollarsign.circle")
                             .foregroundColor(.gray)
                         TextField("Amount (HKD)", value: $amount, formatter: NumberFormatter.currency)
                             .keyboardType(.decimalPad)
-                            .onChange(of: amount) { newValue in
-                                let formattedAmount = String(format: "%.2f", newValue)
+                            .overlay(
+                                HStack {
+                                    Spacer() // Pushes the button to the right
+                                    if amount != 0 {
+                                        Button(action: {
+                                            amount = 0.0
+                                        }) {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundColor(.gray)
+                                        }
+                                        .padding(.trailing, 2)
+                                    }
+                                }
+                            )
+                            .onChange(of: amount) { oldValue, newValue in
+                                let formattedAmount = String(format: "%.2f", newValue as CVarArg)
                                 transactionView.amount = formattedAmount
-                                if let saveAmount = Double(formattedAmount) {
-                                    amount = saveAmount
-                                    print("Saved Amount to database: \($transactionView.amount)")
+                                print("Formatted Amount: \(formattedAmount)")
+                                print("Updated amount in transactionView: \(transactionView.amount)")
                             }
                         }
-                    }
                 }
                 
                 Section(header: Text("Type & Category")) {
