@@ -27,6 +27,16 @@ extension DateFormatter{
     }()
 }
 
+extension NumberFormatter {
+    static var currency: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "HKD"
+        formatter.maximumFractionDigits = 2
+        return formatter
+    }
+}
+
 // Get today's date as a formatted string
 let todayString = Date().formatted()
 

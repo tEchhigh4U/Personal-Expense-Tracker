@@ -73,14 +73,17 @@ struct EditTransactionView: View {
                     HStack {
                         Image(systemName: "dollarsign.circle")
                             .foregroundColor(.gray)
-                        TextField("Amount (HKD)", value: $amount, format: .currency(code: "HKD"))
+                        TextField("Amount (HKD)", value: $amount, formatter: NumberFormatter.currency)
                             .keyboardType(.decimalPad)
                             .onChange(of: amount) { newValue in
-                                transactionView.amount = String(format: "%.2f", newValue)
+                                let formattedAmount = String(format: "%.2f", newValue)
+                                transactionView.amount = formattedAmount
+                                if let saveAmount = Double(formattedAmount) {
+                                    amount = saveAmount
+                                    print("Saved Amount to database: \($transactionView.amount)")
                             }
+                        }
                     }
-                    
-                    
                 }
                 
                 Section(header: Text("Type & Category")) {
@@ -102,7 +105,7 @@ struct EditTransactionView: View {
                         }
                     }
                     .sheet(isPresented: $showingCategoryGrid) {
-                        CategoryGridView(selectedCategoryId: $selectedCategoryId)
+                        CategoryGridView(selectedCategoryId: $selectedCategoryId, selectedCategoryName: $transactionView.category)
                     }
                 }
                 
