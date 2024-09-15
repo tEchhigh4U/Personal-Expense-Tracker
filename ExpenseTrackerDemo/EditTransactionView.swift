@@ -14,7 +14,7 @@ struct EditTransactionView: View {
     @State private var alertType: AlertType?
     @State private var amount: Double
     @State private var selectedDate: Date
-    @State private var selectedCategoryId: Int
+    @State private var selectedCategoryId: Int? = nil
     @State private var showingCategoryGrid = false
     @State private var showingDeleteConfirmation = false
     @State private var showDatePicker = false
@@ -73,14 +73,17 @@ struct EditTransactionView: View {
                     HStack {
                         Image(systemName: "dollarsign.circle")
                             .foregroundColor(.gray)
-                        TextField("Amount (HKD)", value: $amount, format: .currency(code: "HKD"))
+                        TextField("Amount (HKD)", value: $amount, formatter: NumberFormatter.currency)
                             .keyboardType(.decimalPad)
                             .onChange(of: amount) { newValue in
-                                transactionView.amount = String(format: "%.2f", newValue)
+                                let formattedAmount = String(format: "%.2f", newValue)
+                                transactionView.amount = formattedAmount
+                                if let saveAmount = Double(formattedAmount) {
+                                    amount = saveAmount
+                                    print("Saved Amount to database: \($transactionView.amount)")
                             }
+                        }
                     }
-                    
-                    
                 }
                 
                 Section(header: Text("Type & Category")) {
@@ -102,7 +105,7 @@ struct EditTransactionView: View {
                         }
                     }
                     .sheet(isPresented: $showingCategoryGrid) {
-                        CategoryGridView(selectedCategoryId: $selectedCategoryId)
+                        CategoryGridView(selectedCategoryId: $selectedCategoryId, selectedCategoryName: $transactionView.category)
                     }
                 }
                 
@@ -184,6 +187,11 @@ struct EditTransactionView: View {
 
 struct EditTransactionView_Previews: PreviewProvider {
     static var previews: some View {
-        EditTransactionView(transactionView: TransactionEntryViewModel())
+        Group{
+            EditTransactionView(transactionView: TransactionEntryViewModel())
+            EditTransactionView(transactionView: TransactionEntryViewModel())
+                .preferredColorScheme(.dark)
+        }
+        
     }
 }

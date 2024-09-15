@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TransactionList: View {
     @EnvironmentObject var transactionListVM: TransactionListViewModel
-    @FocusState private var isTextFieldFocused: Bool
     
     @State private var searchText = ""
     @State private var activeTransaction: Transaction?
@@ -19,36 +18,30 @@ struct TransactionList: View {
         NavigationView {
                     VStack {
                         // MARK: Search bar
-                        TextField("Search transactions...", text: $transactionListVM.searchText)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding(.horizontal, 10)
-                            .padding(.top, 12)
-                            .focused($isTextFieldFocused) // Bind the focus state to the text field
-                            .onAppear {
-                                // Optionally set the focus when the view appears
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                    self.isTextFieldFocused = true
-                                }
-                            }
+                        SearchBar(searchText: $transactionListVM.searchText)
                         
                         Spacer()
                         
-                        List {
-                            // MARK: Transaction list
-                            ForEach(Array(transactionListVM.groupTransactionsByMonth()), id: \.key) { month, transactions in
-                                Section {
-                                    ForEach(transactions) { transaction in
-                                        TransactionRow(transaction: transaction) {
-                                            self.activeTransaction = transaction
-                                            self.isNavigationActive = true
+                        if transactionListVM.groupTransactionsByMonth().isEmpty {
+                            EmptyStateView()
+                        } else {
+                            List {
+                                // MARK: Transaction list
+                                ForEach(Array(transactionListVM.groupTransactionsByMonth()), id: \.key) { month, transactions in
+                                    Section {
+                                        ForEach(transactions) { transaction in
+                                            TransactionRow(transaction: transaction) {
+                                                self.activeTransaction = transaction
+                                                self.isNavigationActive = true
+                                            }
                                         }
+                                    } header: {
+                                        Text(month)
                                     }
-                                } header: {
-                                    Text(month)
                                 }
                             }
+                            .listStyle(.plain)
                         }
-                        .listStyle(.plain)
                     }
                     .background(
                         NavigationLink(destination: activeTransaction.map { EditTransactionView(transactionView: TransactionEntryViewModel(transaction: $0)) }, isActive: $isNavigationActive) {

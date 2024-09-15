@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  HomeView.swift
 //  ExpenseTrackerDemo
 //
 //  Created by William Hui on 14/8/2024.
@@ -8,8 +8,8 @@
 import SwiftUI
 import SwiftUICharts
 
-struct ContentView: View {
-    @EnvironmentObject var transactionListVM: TransactionListViewModel // Type
+struct HomeView: View {
+    @EnvironmentObject var transactionListVM: TransactionListViewModel
     
     //    var demoData: [Double] = [8, 2, 4, 6, 19, 22]
     @State private var isShowingNewRecordView = false
@@ -20,9 +20,17 @@ struct ContentView: View {
                 ScrollView{
                     VStack(alignment: .leading, spacing: 24) {
                         //MARK: Title
-                        Text("Overview - \(todayString.dateParsed().formatted())" )
+                        Text("Welcome Back 👋")
+                            .font(.largeTitle) // Larger text
+                            .fontWeight(.heavy)
+                            .foregroundColor(Color.primary)
+                            .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5)
+                        
+                        Text("Expense Overview  - \(todayString.dateParsed().formatted())")
                             .font(.title2)
-                            .bold()
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.secondary)
+                            .cornerRadius(10)
                         
                         // MARK: Expense Chart
                         let data = transactionListVM.accumulateTransactions()
@@ -64,8 +72,8 @@ struct ContentView: View {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     Button(action: {
                         transactionListVM.refreshTransactions()
-                }) {
-                    Image(systemName: "arrow.clockwise")
+                    }) {
+                        Image(systemName: "arrow.clockwise")
                     }
                 }
                 
@@ -83,28 +91,29 @@ struct ContentView: View {
                 }
             }
             .navigationDestination(isPresented: $isShowingNewRecordView) {
-                NewTransactionView()
+                NewTransactionView(transactionView: TransactionEntryViewModel())
             }
         }
         .navigationViewStyle(.stack)
         .accentColor(.primary)
     }
+}
     
-    struct ContentView_Previews: PreviewProvider {
-        static let transactionListVM: TransactionListViewModel = {
-            let transactioinListVM  = TransactionListViewModel()
-            transactioinListVM.transactions = transactionListPreviewData
-            return transactioinListVM
-        }()
+struct HomeView_Previews: PreviewProvider {
+    static let transactionListVM: TransactionListViewModel = {
+        let transactioinListVM  = TransactionListViewModel()
+        transactioinListVM.transactions = transactionListPreviewData
+        return transactioinListVM
+    }()
         
-        static var previews: some View {
-            Group{
-                ContentView()
-                ContentView()
-                    .preferredColorScheme(.dark)
-            }
-            .environmentObject(transactionListVM)
-            
+    static var previews: some View {
+        Group{
+            HomeView()
+            HomeView()
+                .preferredColorScheme(.dark)
         }
+        .environmentObject(transactionListVM)
+            
     }
 }
+
