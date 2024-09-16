@@ -156,7 +156,7 @@ struct EditTransactionView: View {
                         HStack {
                             Text("Category")
                             Spacer()
-                            Text(Category.all.first { $0.id == selectedCategoryId }?.name ?? "Select")
+                            Text(Category.all.first { $0.id == selectedCategoryId }?.name ?? "Select a category")
                                 .foregroundColor(.gray)
                         }
                     }

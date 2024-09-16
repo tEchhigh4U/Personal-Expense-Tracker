@@ -70,7 +70,7 @@ final class TransactionListViewModel: ObservableObject {
     }
     
     private func observeTransactions() {
-        print("Start getting data from DB")
+//        print("Start getting data from DB")
         ref.child("transactions").observe(.value) { [weak self] (snapshot, _) in
             guard let self = self else { return }
             
@@ -214,7 +214,7 @@ final class TransactionListViewModel: ObservableObject {
     }
     
     func accumulateTransactions() -> TransactionPrefixSum {
-        print("accumulateTransactions")
+//        print("accumulateTransactions")
         
         guard !transactions.isEmpty else {return [] }
         

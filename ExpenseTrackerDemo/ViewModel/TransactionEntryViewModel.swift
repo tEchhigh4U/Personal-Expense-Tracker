@@ -40,7 +40,14 @@ class TransactionEntryViewModel: ObservableObject {
             self.account = transaction.account
             self.merchant = transaction.merchant
             self.amount = String(transaction.amount)
-            self.type = .debit
+            
+            // Correctly initialize the type using the raw value
+            if let type = TransactionType(rawValue: transaction.type) {
+                self.type = type
+            } else {
+                self.type = .debit // Default or error handling
+            }
+            
             self.categoryId = transaction.categoryId
             self.category = transaction.category
         }
@@ -77,11 +84,20 @@ class TransactionEntryViewModel: ObservableObject {
 
         DispatchQueue.main.async {
             self.merchant = data["merchant"] as? String ?? ""
+            
+            // Correctly parse the type from the snapshot
+            if let typeString = data["type"] as? String, let transactionType = TransactionType(rawValue: typeString) {
+                        self.type = transactionType
+                    } else {
+                        self.type = .debit // Default value or handle error
+                    }
+            
             if let amount = data["amount"] as? Double {
                 self.amount = String(amount)
             }
             self.createdAt = data["date"] as? String ?? ""
             self.categoryId = data["categoryId"] as? Int
+            self.category = data["category"] as? String ?? ""
         }
     }
     
