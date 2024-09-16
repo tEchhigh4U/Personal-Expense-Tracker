@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import Firebase
 import Collections
+import UIKit
 
 typealias TransactionGroup = OrderedDictionary<String, [Transaction]> // [String: [Transaction]] is a dictionary type
 typealias TransactionPrefixSum = [(String, Double)] // a record of accumulated sum
@@ -276,5 +277,35 @@ final class TransactionListViewModel: ObservableObject {
             isExpense: value["isExpense"] as? Bool ?? false,
             isEdited: value["isEdited"] as? Bool ?? false
         )
+    }
+    
+    func exportTransactionsInCSV(transactions: [Transaction]) {
+        let fileName = "Transactions_export.csv"
+        let path = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
+        
+        var csvText = "Created At,Institution,Account,Merchant,Amount,Type,Category,Is Transfer,Is Expense,Is Edited\n"
+
+        for transaction in transactions {
+            let newLine = """
+            \(transaction.createdAt),\(transaction.institution),\(transaction.account),\(transaction.merchant),\(transaction.amount),\(transaction.type),\(transaction.category),\(transaction.isTransfer),\(transaction.isExpense),\(transaction.isEdited)\n
+            """
+            csvText.append(contentsOf: newLine)
+        }
+
+        do {
+            try csvText.write(to: path!, atomically: true, encoding: String.Encoding.utf8)
+            
+            // Ensure that we are able to get the current window scene
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let rootViewController = windowScene.windows.first?.rootViewController else {
+                print("Unable to find a window scene")
+                return
+            }
+            
+            let activityVC = UIActivityViewController(activityItems: [path!], applicationActivities: nil)
+            rootViewController.present(activityVC, animated: true, completion: nil)
+        } catch {
+            print("Failed to write CSV file: \(error.localizedDescription)")
+        }
     }
 }
