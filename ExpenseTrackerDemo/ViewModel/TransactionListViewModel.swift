@@ -21,26 +21,32 @@ final class TransactionListViewModel: ObservableObject {
     private var ref: DatabaseReference = Database.database().reference()
     private var cancellables = Set<AnyCancellable>() // empty object
     
+    // MARK: used in search bar
     var filteredTransactions: [Transaction] {
-            if searchText.isEmpty {
-                return transactions
-            } else {
-                return transactions.filter { transaction in
-                    // Check for matches in text fields
-                    let textMatches = transaction.merchant.lowercased().contains(searchText.lowercased()) ||
-                                      transaction.category.lowercased().contains(searchText.lowercased()) ||
-                                      transaction.institution.lowercased().contains(searchText.lowercased()) ||
-                                      transaction.account.lowercased().contains(searchText.lowercased()) ||
-                                      transaction.createdAt.contains(searchText)  // Direct string comparison for dates
-
-                    // Check for matches in numeric fields (amount)
-                    let amountString = String(format: "%.2f", transaction.amount)  // Convert to string with two decimal places
-                    let amountMatches = amountString.contains(searchText)
-
-                    return textMatches || amountMatches
-                }
+        if searchText.isEmpty {
+            return transactions
+        } else {
+            return transactions.filter { transaction in
+                // Date handling
+                let date = transaction.createdAt.dateParsed()
+                let formattedDate = DateFormatter.allNumericUS.string(from: date)
+                
+                // Check for matches in text fields
+                let textMatches = transaction.merchant.lowercased().contains(searchText.lowercased()) ||
+                transaction.category.lowercased().contains(searchText.lowercased()) ||
+                transaction.institution.lowercased().contains(searchText.lowercased()) ||
+                transaction.account.lowercased().contains(searchText.lowercased()) ||
+                formattedDate.contains(searchText.lowercased()) ||
+                formattedDate.contains(searchText.uppercased())
+                    
+                // Check for matches in numeric fields (amount)
+                let amountString = String(format: "%.2f", transaction.amount)  // Convert to string with two decimal places
+                let amountMatches = amountString.contains(searchText)
+                    
+                return textMatches || amountMatches
             }
         }
+    }
     
     var currentTransaction: Transaction?
     
@@ -64,7 +70,7 @@ final class TransactionListViewModel: ObservableObject {
     }
     
     private func observeTransactions() {
-        print("Start getting data from DB")
+//        print("Start getting data from DB")
         ref.child("transactions").observe(.value) { [weak self] (snapshot, _) in
             guard let self = self else { return }
             
@@ -208,7 +214,7 @@ final class TransactionListViewModel: ObservableObject {
     }
     
     func accumulateTransactions() -> TransactionPrefixSum {
-        print("accumulateTransactions")
+//        print("accumulateTransactions")
         
         guard !transactions.isEmpty else {return [] }
         

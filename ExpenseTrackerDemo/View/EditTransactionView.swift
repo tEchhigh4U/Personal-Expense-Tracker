@@ -14,7 +14,7 @@ struct EditTransactionView: View {
     @State private var alertType: AlertType?
     @State private var amount: Double
     @State private var selectedDate: Date
-    @State private var selectedCategoryId: Int? = nil
+    @State private var selectedCategoryId: Int?
     @State private var showingCategoryGrid = false
     @State private var showingDeleteConfirmation = false
     @State private var showDatePicker = false
@@ -24,7 +24,7 @@ struct EditTransactionView: View {
         self.transactionView = transactionView
         _amount = State(initialValue: Double(transactionView.amount) ?? 0)
         _selectedDate = State(initialValue: transactionView.createdAt.dateParsed())
-        _selectedCategoryId = State(initialValue: transactionView.categoryId ?? 0)
+        _selectedCategoryId = State(initialValue: transactionView.categoryId)
     }
     
     var body: some View {
@@ -156,7 +156,7 @@ struct EditTransactionView: View {
                         HStack {
                             Text("Category")
                             Spacer()
-                            Text(Category.all.first { $0.id == selectedCategoryId }?.name ?? "Select")
+                            Text(transactionView.category)
                                 .foregroundColor(.gray)
                         }
                     }

@@ -12,7 +12,7 @@ struct SearchBar: View {
     @FocusState private var isTextFieldFocused: Bool
 
     var body: some View {
-        TextField("Search transactions...", text: $searchText)
+        TextField("Search merchant, category, amount...", text: $searchText)
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .padding(.horizontal, 10)
             .padding(.top, 10)

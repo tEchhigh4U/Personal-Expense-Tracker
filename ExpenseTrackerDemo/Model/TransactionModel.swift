@@ -39,6 +39,7 @@ struct Transaction: Identifiable, Codable, Hashable {
         return type == TransactionType.credit.rawValue ? amount : -amount
     }
     
+    // MARK: Grouped Transaction Data
     var month: String {
         dateParsed.formatted(.dateTime.year().month(.wide))
     }
