@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		100A84772C971B2100A358B7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 100A84762C971B2100A358B7 /* GoogleService-Info.plist */; };
 		100A847B2C97F75800A358B7 /* ExportRecordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100A847A2C97F75800A358B7 /* ExportRecordsView.swift */; };
+		100A84802C98126E00A358B7 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 100A847F2C98126E00A358B7 /* LICENSE.txt */; };
 		1086B59A2C91BA37008E324F /* EditTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1086B5992C91BA37008E324F /* EditTransactionView.swift */; };
 		1086B59E2C920D10008E324F /* CategoryGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1086B59D2C920D10008E324F /* CategoryGridView.swift */; };
 		1086B5A22C94A27A008E324F /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1086B5A12C94A27A008E324F /* SearchBar.swift */; };
@@ -36,6 +37,7 @@
 /* Begin PBXFileReference section */
 		100A84762C971B2100A358B7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		100A847A2C97F75800A358B7 /* ExportRecordsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportRecordsView.swift; sourceTree = "<group>"; };
+		100A847F2C98126E00A358B7 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		1086B5992C91BA37008E324F /* EditTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTransactionView.swift; sourceTree = "<group>"; };
 		1086B59D2C920D10008E324F /* CategoryGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryGridView.swift; sourceTree = "<group>"; };
 		1086B5A12C94A27A008E324F /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 			children = (
 				10D12EB42C84D02200D2AAD6 /* README.md */,
 				10D12E802C6CCFF500D2AAD6 /* .gitignore */,
+				100A847F2C98126E00A358B7 /* LICENSE.txt */,
 				100A84762C971B2100A358B7 /* GoogleService-Info.plist */,
 				10D12E712C6CCF7B00D2AAD6 /* ExpenseTrackerDemo */,
 				10D12E702C6CCF7B00D2AAD6 /* Products */,
@@ -222,6 +225,7 @@
 				10D12E7A2C6CCF7C00D2AAD6 /* Preview Assets.xcassets in Resources */,
 				100A84772C971B2100A358B7 /* GoogleService-Info.plist in Resources */,
 				10D12E812C6CCFF500D2AAD6 /* .gitignore in Resources */,
+				100A84802C98126E00A358B7 /* LICENSE.txt in Resources */,
 				10D12E772C6CCF7C00D2AAD6 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
