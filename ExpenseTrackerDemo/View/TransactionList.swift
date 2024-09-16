@@ -13,6 +13,7 @@ struct TransactionList: View {
     @State private var searchText = ""
     @State private var activeTransaction: Transaction?
     @State private var isNavigationActive = false
+    @State private var isExportOptionsVisible = false
     
     var body: some View {
         NavigationView {
@@ -51,6 +52,17 @@ struct TransactionList: View {
                     )
                     .navigationTitle("Transactions")
                     .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            NavigationLink(destination: ExportRecordsView(), isActive: $isExportOptionsVisible) {
+                                Button(action: {
+                                    self.isExportOptionsVisible = true
+                                }) {
+                                    Image(systemName: "square.and.arrow.up")
+                                }
+                            }
+                        }
+                    }
                 }
             }
 }
