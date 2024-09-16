@@ -28,7 +28,7 @@ struct CategoryGridView: View {
 
                         // MARK: Category Name
                         Text(category.name)
-                            .font(.system(size: category.name.count > 9 ? 12 : 14)) // Smaller font for longer names
+                            .font(.system(size: category.name.count > 9 ? 12 : 14))
                             .multilineTextAlignment(.center)
                             .lineLimit(2)
                     }

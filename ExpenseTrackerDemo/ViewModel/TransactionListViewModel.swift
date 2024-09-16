@@ -71,7 +71,6 @@ final class TransactionListViewModel: ObservableObject {
     }
     
     private func observeTransactions() {
-//        print("Start getting data from DB")
         ref.child("transactions").observe(.value) { [weak self] (snapshot, _) in
             guard let self = self else { return }
             
@@ -121,91 +120,6 @@ final class TransactionListViewModel: ObservableObject {
         print("Data retrieval observation set up completed.")
     }
     
-    // get transactions record from the url
-//    func getTransactions() {
-//        guard let url = URL(string: "https://designcode.io/data/transactions.json") else {
-//            print("Invalid URL is being used.")
-//            return
-//        }
-//        
-//        let decoder = JSONDecoder()
-//        decoder.dateDecodingStrategy = .formatted(DateFormatter.allNumericUS)
-//        
-//        
-//                URLSession.shared.dataTaskPublisher(for:url)
-//                    .tryMap { (data, response) -> Data in
-//                        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-//                            dump(response)
-//                            throw URLError(.badServerResponse)
-//                        }
-//                        let dataString = String(data: data, encoding: .utf8) ?? "Invalid data encoding"
-//                            print("Received data: \(dataString)")
-//                        return data
-//                    }
-//                    .decode(type: [Transaction].self, decoder: decoder)
-//                    .receive(on : DispatchQueue.main)
-//                    .sink(receiveCompletion: { completion in
-//                        switch completion {
-//                        case .failure(let error):
-//                            print("Error fetching transactions:", error.localizedDescription)
-//                        case .finished:
-//                            print("Finished fetching transactions")
-//                        }
-//                    }, receiveValue: { [weak self] result in
-//                        self?.transactions = result
-//                        print("Transactions: \(result)")
-//                    })
-//                    .store(in: &cancellables)
-//            }
-
-//    Below are the code for debugging
-//        URLSession.shared.dataTask(with: url) { data, response, error in
-//            guard let data = data else {
-//                print("No data in response: \(error?.localizedDescription ?? "Unknown error")")
-//                return
-//            }
-//            do {
-//                let transactions = try JSONDecoder().decode([Transaction].self, from: data)
-//                print("Decoded transactions:", transactions)
-//            } catch DecodingError.keyNotFound(let key, let context) {
-//                print("Could not find key \(key) in JSON: \(context.debugDescription)")
-//            } catch DecodingError.typeMismatch(let type, let context) {
-//                print("Type mismatch for type \(type) in JSON: \(context.debugDescription)")
-//            } catch DecodingError.valueNotFound(let type, let context) {
-//                print("Missing expected value of type \(type) in JSON: \(context.debugDescription)")
-//            } catch DecodingError.dataCorrupted(let context) {
-//                print("Corrupted data: \(context.debugDescription)")
-//            } catch {
-//                print("Error decoding JSON: \(error.localizedDescription)")
-//            }
-//        }.resume()
-    
-//    func groupTransactionsByMonth() -> TransactionGroup {
-//        guard !transactions.isEmpty else { return [:] }
-//
-//        let inputFormatter = DateFormatter.allNumericUS
-//        let monthYearFormatter = DateFormatter()
-//        monthYearFormatter.dateFormat = "MMMM yyyy"
-//
-//        var dateCache = [String: Date]()
-//        let groupedTransactions = transactions.reduce(into: [String: [Transaction]]()) { (acc, transaction) in
-//            let transactionDate = dateCache[transaction.date] ?? inputFormatter.date(from: transaction.date)
-//            dateCache[transaction.date] = transactionDate // Cache it for later use
-//
-//            if let transactionDate = transactionDate {
-//                let monthYearKey = monthYearFormatter.string(from: transactionDate)
-//                acc[monthYearKey, default: []].append(transaction)
-//            }
-//        }
-//
-//        return groupedTransactions.mapValues { transactions in
-//            transactions.sorted { $0.date > $1.date }
-//        }.sorted(by: { monthYearFormatter.date(from: $0.key) ?? Date.distantPast > monthYearFormatter.date(from: $1.key) ?? Date.distantPast })
-//          .reduce(into: OrderedDictionary<String, [Transaction]>()) { (result, tuple) in
-//            result[tuple.key] = tuple.value
-//        }
-//    }
-    
     func groupTransactionsByMonth() -> TransactionGroup {
         guard !transactions.isEmpty else { return [:] }
         
@@ -215,14 +129,12 @@ final class TransactionListViewModel: ObservableObject {
     }
     
     func accumulateTransactions() -> TransactionPrefixSum {
-//        print("accumulateTransactions")
-        
         guard !transactions.isEmpty else {return [] }
         
-        // MARK: update the actual date when publishing the application
-//        let today = "02/17/2022".dateParsed() // Date()
+        // Get today's date as a formatted string in the extension file
         let today = todayString.dateParsed()
         print("today's date is", today)
+        
         let dateInterval = Calendar.current.dateInterval(of: .month, for: today)!
         print("dateInterval", dateInterval)
         
@@ -238,7 +150,6 @@ final class TransactionListViewModel: ObservableObject {
             cumulativeSum.append((date.formatted(), sum))
             print(date.formatted(), "dailyTotal:", dailyTotal, "sum:", sum)
         }
-        
         return cumulativeSum
     }
     
