@@ -31,6 +31,7 @@ struct EditTransactionView: View {
         NavigationView {
             Form {
                 Section(header: Text("Transaction Details")) {
+                    // MARK: Transaction Date
                     Button(action: {
                         withAnimation {
                             self.showDatePicker.toggle()
@@ -54,10 +55,12 @@ struct EditTransactionView: View {
                         .datePickerStyle(.graphical)
                     }
                     
+                    // MARK: Transaction Institution
                     HStack {
                         Image(systemName: "building.2")
                             .foregroundColor(.gray)
                         TextField("Institution or Bank", text: $transactionView.institution)
+                            .padding(.trailing, 30)
                             .overlay(
                                 HStack {
                                     Spacer()
@@ -74,10 +77,12 @@ struct EditTransactionView: View {
                             )
                     }
                     
+                    // MARK: Transaction Account
                     HStack {
                         Image(systemName: "creditcard")
                             .foregroundColor(.gray)
                         TextField("Account Name or Number", text: $transactionView.account)
+                            .padding(.trailing, 30)
                             .overlay(
                                 HStack {
                                     Spacer()
@@ -94,10 +99,12 @@ struct EditTransactionView: View {
                             )
                     }
                     
+                    // // MARK: Transaction Merchant
                     HStack {
                         Image(systemName: "cart")
                             .foregroundColor(.gray)
                         TextField("Merchant", text: $transactionView.merchant)
+                            .padding(.trailing, 30)
                             .overlay(
                                 HStack {
                                     Spacer()
@@ -114,11 +121,13 @@ struct EditTransactionView: View {
                             )
                     }
                     
+                    // MARK: Transaction Amount
                     HStack {
                         Image(systemName: "dollarsign.circle")
                             .foregroundColor(.gray)
                         TextField("Amount (HKD)", value: $amount, formatter: NumberFormatter.currency)
                             .keyboardType(.decimalPad)
+                            .padding(.trailing, 30)
                             .overlay(
                                 HStack {
                                     Spacer()
@@ -143,6 +152,7 @@ struct EditTransactionView: View {
                 }
                 
                 Section(header: Text("Type & Category")) {
+                    // MARK: Transaction Type
                     Picker("Type", selection: $transactionView.type) {
                         Text("Select a type").tag(Int?.none)
                         ForEach(TransactionType.allCases, id: \.self) { type in
@@ -150,6 +160,7 @@ struct EditTransactionView: View {
                         }
                     }
                     
+                    // MARK: Transaction Category
                     Button(action: {
                         showingCategoryGrid = true
                     }) {
@@ -165,6 +176,7 @@ struct EditTransactionView: View {
                     }
                 }
                 
+                // MARK: Save Transaction Button
                 Section {
                     Button(action: {
                         showingSaveConfirmation = true
