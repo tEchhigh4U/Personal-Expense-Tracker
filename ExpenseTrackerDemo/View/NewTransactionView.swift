@@ -35,16 +35,18 @@ struct NewTransactionView: View {
         let institutionValid = !transactionView.institution.isEmpty
         let accountValid = !transactionView.account.isEmpty
         let merchantValid = !transactionView.merchant.isEmpty
+        
         let amountValid = !transactionView.amount.isEmpty
         let isAmountValid: Bool = Double(transactionView.amount) != nil
+        
         let isCategoryIdValid: Bool = Category.all.contains { $0.id == transactionView.categoryId}
         
         // Debugging outputs
         // print("Institution valid: \(institutionValid)")
         // print("Account valid: \(accountValid)")
         // print("Merchant valid: \(merchantValid)")
-        // print("Amount valid: \(amountValid) and is a valid number: \(isAmountValid)")
-        print("Category ID valid in the VALID form: \(isCategoryIdValid)")
+        print("Amount valid: \(amountValid) and is a valid number: \(isAmountValid)")
+        // print("Category ID valid in the VALID form: \(isCategoryIdValid)")
 
         return institutionValid && accountValid && merchantValid && amountValid && isAmountValid && isCategoryIdValid
     }
@@ -87,6 +89,7 @@ struct NewTransactionView: View {
                         Image(systemName: "building.2")
                             .foregroundColor(.gray)
                         TextField("Institution or Bank", text: $transactionView.institution)
+                            .padding(.trailing, 30)
                             .overlay(
                                 HStack {
                                     Spacer() // Pushes the button to the right
@@ -108,6 +111,7 @@ struct NewTransactionView: View {
                         Image(systemName: "creditcard")
                             .foregroundColor(.gray)
                         TextField("Account Name or Number", text: $transactionView.account)
+                            .padding(.trailing, 30)
                             .overlay(
                                 HStack{
                                     Spacer()
@@ -129,6 +133,7 @@ struct NewTransactionView: View {
                         Image(systemName: "cart")
                             .foregroundColor(.gray)
                         TextField("Merchant", text: $transactionView.merchant)
+                            .padding(.trailing, 30)
                             .overlay(
                                 HStack{
                                     Spacer()
@@ -151,6 +156,7 @@ struct NewTransactionView: View {
                             .foregroundColor(.gray)
                         TextField("Amount(HKD)", text: $transactionView.amount)
                             .keyboardType(.decimalPad)
+                            .padding(.trailing, 30)
                             .overlay(
                                 HStack{
                                     Spacer()
@@ -176,20 +182,22 @@ struct NewTransactionView: View {
                         }
                     }
                     
-//                                            Picker("Category", selection: $transactionView.categoryId) {
-//                                                Text("Select a category").tag(Int?.none)
-//                                                ForEach(transactionView.categories, id: \.id) { category in
-//                                                    Text(category.name).tag(category.id as Int?)
-//                                                }
-//                                            }
-//                                            .onChange(of: transactionView.categoryId) { newValue in
-//                                                if let categoryId = newValue,
-//                                                   let selectedCategory = transactionView.categories.first(where: { $0.id == categoryId }) {
-//                                                    transactionView.category = selectedCategory.name
-//                                                } else {
-//                                                    transactionView.category = ""
-//                                                }
-//                                            }
+                    // MARK: Picker for Category - Alernative approach
+                    /* Picker("Category", selection: $transactionView.categoryId) {
+                        Text("Select a category").tag(Int?.none)
+                        ForEach(transactionView.categories, id: \.id) { category in
+                            Text(category.name).tag(category.id as Int?)
+                        }
+                    }
+                    .onChange(of: transactionView.categoryId) { newValue in
+                        if let categoryId = newValue,
+                           let selectedCategory = transactionView.categories.first(where: { $0.id == categoryId }) {
+                            transactionView.category = selectedCategory.name
+                        } else {
+                            transactionView.category = ""
+                        }
+                    } */
+
                     
                     Button(action: {
                         showingCategoryGrid = true
