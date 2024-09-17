@@ -25,15 +25,22 @@ struct EmptyStateView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white.edgesIgnoringSafeArea(.all))
-        .background(Color(.systemBackground))
+        .background(Color(.systemBackground).edgesIgnoringSafeArea(.all))
     }
 }
 
 struct EmptyStateView_Previews: PreviewProvider {
     static var previews: some View {
-        EmptyStateView()
-            .previewLayout(.sizeThatFits)
-            .padding()
+        Group{
+            EmptyStateView()
+                .previewLayout(.sizeThatFits)
+                .padding()
+            
+            EmptyStateView()
+                .previewLayout(.sizeThatFits)
+                .padding()
+                .preferredColorScheme(.dark)
+        }
+
     }
 }
