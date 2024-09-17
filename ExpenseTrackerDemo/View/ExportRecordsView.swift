@@ -9,16 +9,18 @@ import SwiftUI
 
 struct ExportRecordsView: View {
     @EnvironmentObject var transactionListVM: TransactionListViewModel
+    @State private var showAlert = false
     
     var body: some View {
         NavigationView {
             Form {
-                Text("Tap the button below to export all transactions into a CSV file. \nThe file can then be shared or saved as needed.")
+                Text("Tap the button below to export all transactions into a CSV file. \n\nThe file can then be saved as a backup.")
                     .padding(.vertical, 5)
                 
+                // MARK: Export Button
                 Section {
                     Button(action: {
-                        transactionListVM.exportTransactionsInCSV(transactions: transactionListVM.transactions)
+                        showAlert = true
                     }) {
                         Text("Export to CSV")
                         .bold()
@@ -31,6 +33,14 @@ struct ExportRecordsView: View {
                 }
             }
             .navigationBarTitle("Export Transaction", displayMode: .inline)
+            .alert("Secure Your Data", isPresented: $showAlert) {
+                Button("OK", role: .cancel) { 
+                    transactionListVM.exportTransactionsInCSV(transactions: transactionListVM.transactions)
+                }
+            }
+            message: {
+                Text("Please keep your data safe and secure. \n\n Do NOT share your CSV with others.")
+            }
         }
     }
 }
